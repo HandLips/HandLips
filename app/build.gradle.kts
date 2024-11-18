@@ -82,4 +82,8 @@ dependencies {
     // UI Tests
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Coil : image loading
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

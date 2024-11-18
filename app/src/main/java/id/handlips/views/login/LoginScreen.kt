@@ -1,12 +1,14 @@
 package id.handlips.views.login
 
 import LongButton
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -25,13 +27,13 @@ import androidx.compose.ui.unit.sp
 import id.handlips.component.button.GoogleButton
 import id.handlips.component.textfield.EmailTextField
 import id.handlips.component.textfield.PasswordTextField
+import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.poppins
 
 @Composable
 fun LoginScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
