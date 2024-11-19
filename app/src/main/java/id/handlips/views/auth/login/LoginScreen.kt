@@ -1,15 +1,15 @@
-package id.handlips.views.login
+package id.handlips.views.auth.login
 
-import LongButton
-import androidx.compose.foundation.background
+import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import id.handlips.component.button.GoogleButton
 import id.handlips.component.textfield.EmailTextField
 import id.handlips.component.textfield.PasswordTextField
@@ -31,13 +32,16 @@ import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.poppins
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavHostController
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(20.dp).verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
@@ -74,7 +78,7 @@ fun LoginScreen() {
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("forgot_password") },
 
                 ) {
                 Text(text = "Lupa password?", fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 16.sp)
@@ -93,5 +97,11 @@ fun LoginScreen() {
             text = "Masuk dengan Google",
             onClick = {}
         )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+            Text(text = "Belum punya akun?", fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.Gray)
+            TextButton(onClick = { navController.navigate("register") }) {
+                Text(text = "Daftar", fontFamily = poppins, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Blue)
+            }
+        }
     }
 }
