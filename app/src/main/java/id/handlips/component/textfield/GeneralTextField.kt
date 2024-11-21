@@ -24,7 +24,6 @@ fun GeneralTextField(
 ){
     Column(modifier = Modifier.padding(top = 15.dp)) {
         Text(text = title, fontFamily = poppins, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-
         OutlinedTextField(
             value = value,
             onValueChange = { newValue ->

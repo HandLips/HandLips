@@ -5,4 +5,7 @@
     <string name="send">Send</string>
     <string name="label_email">Masukan email</string>
     <string name="email">Email</string>
+    <string name="back">Back</string>
+    <string name="oops">Oops!</string>
+    <string name="error_image_description">Error image description</string>
 </resources>
