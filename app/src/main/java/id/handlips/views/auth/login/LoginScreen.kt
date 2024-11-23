@@ -86,7 +86,9 @@ fun LoginScreen(
         }
         LongButton(
             text = "MASUK",
-            onClick = {}
+            onClick = {
+                navController.navigate("main")
+            }
         )
         HorizontalDivider(Modifier.padding(top = 30.dp),
             thickness = 1.dp,
