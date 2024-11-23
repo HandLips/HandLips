@@ -14,10 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import id.handlips.R
 import id.handlips.ui.theme.poppins
 
 @Composable
@@ -28,7 +30,7 @@ fun EmailTextField(
     onValueChange: (String) -> Unit,
 ) {
     var isError by remember { mutableStateOf(false) }
-    Column(modifier = Modifier.padding(top = 15.dp)) {
+    Column(modifier = Modifier.padding(top = 5.dp)) {
         Text(text = title, fontFamily = poppins, fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
         OutlinedTextField(
@@ -45,7 +47,7 @@ fun EmailTextField(
 
         if (isError) {
             Text(
-                text = "Error, email tidak valid",
+                text = stringResource(R.string.error_invalid_email),
                 color = MaterialTheme.colorScheme.error,
                 fontFamily = poppins,
                 fontWeight = FontWeight.Normal,

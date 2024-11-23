@@ -3,14 +3,13 @@ package id.handlips.views.auth.register
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,14 +58,14 @@ fun RegisterScreen(navController: NavHostController) {
             ) {
 
                 Text(
-                    text = "Silahkan Buat Akun \uD83D\uDC4C",
+                    text = stringResource(R.string.create_an_account),
                     fontFamily = poppins,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
                 Text(
-                    text = "Buat akun baru untuk akses penuh ke penerjemahan bahasa isyarat yang mudah dan cepat.",
+                    text = stringResource(R.string.description_register),
                     fontFamily = poppins,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -74,27 +73,28 @@ fun RegisterScreen(navController: NavHostController) {
                 )
                 Spacer(Modifier.height(20.dp))
                 GeneralTextField(
-                    title = "Nama",
-                    label = "Masukkan nama",
+                    title = stringResource(R.string.name),
+                    label = stringResource(R.string.enter_name),
                     value = name,
                     onValueChange = { name = it }
                 )
                 EmailTextField(
-                    title = "Email",
-                    label = "Masukkan email",
+                    title = stringResource(R.string.email),
+                    label = stringResource(R.string.enter_email),
                     value = email,
-                    onValueChange = { email = it }
+                    onValueChange = {
+                        email = it
+                    }
                 )
-                Spacer(Modifier.height(10.dp))
                 PasswordTextField(
-                    title = "Kata Sandi",
-                    label = "Masukkan kata sandi",
+                    title = stringResource(R.string.password),
+                    label = stringResource(R.string.enter_password),
                     value = password,
                     onValueChange = { password = it }
                 )
                 Spacer(Modifier.height(20.dp))
                 LongButton(
-                    text = "DAFTAR",
+                    text = stringResource(R.string.btn_register),
                     onClick = {
                         // Tambahkan logika untuk proses pendaftaran
                     }
@@ -106,7 +106,7 @@ fun RegisterScreen(navController: NavHostController) {
                 )
                 Spacer(Modifier.height(10.dp))
                 GoogleButton(
-                    text = "Daftar dengan Google",
+                    text = stringResource(R.string.register_with_google),
                     onClick = {
                         // Tambahkan logika untuk daftar dengan Google
                     }
@@ -117,7 +117,7 @@ fun RegisterScreen(navController: NavHostController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Sudah punya akun?",
+                        text = stringResource(R.string.do_you_have_an_account),
                         fontFamily = poppins,
                         fontWeight = FontWeight.Normal,
                         fontSize = 16.sp,
@@ -125,7 +125,7 @@ fun RegisterScreen(navController: NavHostController) {
                     )
                     TextButton(onClick = { navController.navigate("login") }) {
                         Text(
-                            text = "Masuk",
+                            text = stringResource(R.string.login),
                             fontFamily = poppins,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,

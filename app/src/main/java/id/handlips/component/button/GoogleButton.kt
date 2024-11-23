@@ -28,7 +28,6 @@ import id.handlips.ui.theme.White
 fun GoogleButton(
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = White,
         contentColor = Blue
@@ -41,7 +40,6 @@ fun GoogleButton(
             .padding(top = 20.dp)
             .height(50.dp),
         colors = buttonColors,
-        enabled = enabled,
         border = BorderStroke(1.dp, Color.Gray),
         shape = Shapes().small
     ) {

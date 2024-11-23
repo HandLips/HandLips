@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,7 +52,7 @@ fun ForgotPasswordScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
-                            contentDescription = "Back Icon"
+                            contentDescription = stringResource(R.string.back_icon)
                         )
                     }
                 },
@@ -65,7 +63,8 @@ fun ForgotPasswordScreen(
             Column(
                 modifier = Modifier
                     .padding(20.dp)
-                    .padding(paddingValues).verticalScroll(scrollState),
+                    .padding(paddingValues)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.Start
             ) {
                 Row(
@@ -74,25 +73,26 @@ fun ForgotPasswordScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_forgot_password),
-                        contentDescription = "Forgot Password Icon",
+                        contentDescription = stringResource(R.string.forgot_password_icon),
                         modifier = Modifier.size(180.dp)
                     )
                 }
                 Spacer(modifier = Modifier.padding(bottom = 30.dp))
                 Text(
-                    text = "Lupa kata sandi?",
+                    text = stringResource(R.string.forgot_password),
                     fontFamily = poppins,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
                 Text(
-                    text = "Masukkan email Anda, dan kami akan mengirimkan tautan untuk reset kata sandi.",
+                    text = stringResource(R.string.enter_your_email_and_we_ll_send_you_a_link_to_reset_your_password),
                     fontFamily = poppins,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
+                Spacer(Modifier.padding(top = 10.dp))
                 EmailTextField(
                     title = stringResource(R.string.email),
                     label = stringResource(R.string.label_email),

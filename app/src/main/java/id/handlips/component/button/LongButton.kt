@@ -16,7 +16,6 @@ import id.handlips.ui.theme.White
 fun LongButton(
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = Blue,
         contentColor = White
@@ -26,7 +25,6 @@ fun LongButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth().padding(top = 20.dp).height(50.dp),
-        enabled = enabled,
         colors = buttonColors,
         shape = Shapes().small
     ) {
