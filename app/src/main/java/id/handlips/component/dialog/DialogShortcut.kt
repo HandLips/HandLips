@@ -74,20 +74,21 @@ fun DialogShortcut(
                     onValueChange = { newValue ->
                         title = newValue
                     },
-                    value = title
+                    value = title,
+                    label = "Enter title"
                 )
                 DescriptionTextField(
                     label = "Saran",
                     onValueChange = { newValue ->
-                        feedback = newValue
+                        sound = newValue
                     },
-                    value = feedback
+                    value = sound
                 )
                 // Buttons
                 DoubleButton(
                     onClickCancel = { onDismissRequest() },
                     onClickConfirm = {
-                        onConfirm(feedback)
+                        onConfirm(sound)
                     },
                 )
             }
