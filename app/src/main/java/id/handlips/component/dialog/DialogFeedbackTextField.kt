@@ -49,14 +49,12 @@ fun DialogFeedbackTextField(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Title
                 Text(
                     text = stringResource(R.string.feedback),
                     fontFamily = poppins,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
-                // Error Message
                 Text(
                     text = stringResource(R.string.how_do_you_feel_about_using_this_app),
                     fontFamily = poppins,
@@ -73,7 +71,6 @@ fun DialogFeedbackTextField(
                     },
                     value = feedback
                 )
-                // Buttons
                 DoubleButton(
                     onClickCancel = { onDismissRequest() },
                     onClickConfirm = {

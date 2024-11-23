@@ -29,11 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import id.handlips.R
 import id.handlips.component.button.GoogleButton
-import id.handlips.component.dialog.DialogConfirmation
-import id.handlips.component.dialog.DialogError
-import id.handlips.component.dialog.DialogFeedbackEmot
-import id.handlips.component.dialog.DialogFeedbackTextField
-import id.handlips.component.dialog.DialogSuccess
 import id.handlips.component.textfield.EmailTextField
 import id.handlips.component.textfield.PasswordTextField
 import id.handlips.ui.theme.Blue
@@ -45,7 +40,6 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var showErrorDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -111,17 +105,8 @@ fun LoginScreen(
         LongButton(
             text = stringResource(R.string.btn_login),
             onClick = {
-                showErrorDialog = true
             }
         )
-        if (showErrorDialog) {
-            DialogFeedbackTextField(
-                onDismissRequest = {
-                    showErrorDialog = false
-                },
-                onConfirm = { showErrorDialog = false },
-            )
-        }
         HorizontalDivider(
             Modifier.padding(top = 30.dp),
             thickness = 1.dp,
