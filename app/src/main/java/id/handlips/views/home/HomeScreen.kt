@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -22,7 +23,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            Text(text = "Welcome to Home")
+            Text(text = "Selamat datang di home")
         }
     }
 }

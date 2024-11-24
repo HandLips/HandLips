@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import id.handlips.component.button.LongButton
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = hiltViewModel(), onLogout: () -> Unit) {
     Scaffold (modifier = modifier.fillMaxSize()){ paddingValues ->
         Column(
             modifier = Modifier
@@ -23,6 +25,14 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(text = "Welcome to Profile")
+            LongButton(
+                onClick = {
+                    if (viewModel.logout()){
+                        onLogout()
+                    }
+                },
+                text = "Logout"
+            )
         }
     }
 }

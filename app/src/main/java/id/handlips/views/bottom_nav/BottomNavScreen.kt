@@ -1,4 +1,4 @@
-package id.handlips.views
+package id.handlips.views.bottom_nav
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,14 +27,14 @@ import id.handlips.navigation.BottomNavGraph
 import id.handlips.ui.theme.Blue
 
 @Composable
-fun MainScreen() {
+fun BottomNavScreen(onLogout: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            BottomNavGraph(navController = navController)
+            BottomNavGraph(onLogout, navController)
         }
     }
 }

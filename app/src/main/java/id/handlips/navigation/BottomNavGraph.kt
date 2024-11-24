@@ -12,6 +12,7 @@ import id.handlips.views.shortcut.ShortcutScreen
 
 @Composable
 fun BottomNavGraph(
+    onLogout: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -30,7 +31,7 @@ fun BottomNavGraph(
             ShortcutScreen()
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(onLogout = onLogout)
         }
     }
 }

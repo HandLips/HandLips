@@ -31,13 +31,12 @@ fun DialogError(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
-                .fillMaxWidth().wrapContentHeight()
+                .wrapContentHeight()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
