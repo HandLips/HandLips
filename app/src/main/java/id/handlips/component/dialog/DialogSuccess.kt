@@ -32,7 +32,7 @@ import id.handlips.ui.theme.poppins
 @Composable
 fun DialogSuccess(
     onDismissRequest: () -> Unit,
-    textError: String,
+    textSuccess: String,
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -56,7 +56,7 @@ fun DialogSuccess(
                 )
                 // Error Message
                 Text(
-                    text = textError,
+                    text = textSuccess,
                     fontFamily = poppins,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,

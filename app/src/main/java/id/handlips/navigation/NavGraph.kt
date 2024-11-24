@@ -1,5 +1,6 @@
 package id.handlips.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,6 +10,7 @@ import id.handlips.views.auth.forgot_password.ForgotPasswordScreen
 import id.handlips.views.auth.login.LoginScreen
 import id.handlips.views.auth.register.RegisterScreen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Login.route) {
@@ -21,7 +23,7 @@ fun NavGraph(navController: NavHostController) {
         composable(route = Screen.ForgotPassword.route){
             ForgotPasswordScreen(navController)
         }
-        composable(route = Screen.MainScreen.route ) {
+        composable(route = Screen.Main.route ) {
             MainScreen()
         }
     }
