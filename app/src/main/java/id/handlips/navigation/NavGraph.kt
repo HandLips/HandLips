@@ -24,7 +24,11 @@ fun NavGraph(navController: NavHostController) {
             ForgotPasswordScreen(navController)
         }
         composable(route = Screen.Main.route) {
-            BottomNavScreen(onLogout = { navController.navigate(Screen.Login.route) })
+            BottomNavScreen(onLogout = { navController.navigate(Screen.Login.route){
+                popUpTo(Screen.Main.route){
+                    inclusive = true
+                }
+            } })
         }
     }
 }
