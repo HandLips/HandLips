@@ -1,5 +1,6 @@
 package id.handlips.views.auth.login
 
+import androidx.compose.foundation.background
 import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,10 +49,10 @@ fun LoginScreen(
 ) {
     // State management
     val uiState by viewModel.uiState.collectAsState()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     var showDialogSuccess by remember { mutableStateOf(false) }
     var showDialogError by remember { mutableStateOf(false) }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
@@ -172,20 +173,15 @@ fun LoginScreen(
     // Handle UI States
     LaunchedEffect(uiState) {
         when (uiState) {
-            is UiState.Loading -> {
-                // Show loading overlay
-            }
             is UiState.Success -> {
                 showDialogSuccess = true
-                // Navigate after successful login
-                navController.navigate("main") {
-                    popUpTo("login") { inclusive = true }
-                }
             }
+
             is UiState.Error -> {
                 errorMessage = (uiState as UiState.Error).message
                 showDialogError = true
             }
+
             else -> {}
         }
     }
@@ -194,7 +190,10 @@ fun LoginScreen(
     if (showDialogSuccess) {
         DialogSuccess(
             onDismissRequest = {
-                showDialogSuccess = false
+                navController.popBackStack()
+                navController.navigate("main") {
+                    popUpTo("login") { inclusive = true }
+                }
             },
             textSuccess = "Login successful!"
         )
@@ -209,7 +208,6 @@ fun LoginScreen(
         )
     }
 
-    // Show loading animation when in loading state
     if (uiState is UiState.Loading) {
         LoadingAnimation()
     }
