@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.auth)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
