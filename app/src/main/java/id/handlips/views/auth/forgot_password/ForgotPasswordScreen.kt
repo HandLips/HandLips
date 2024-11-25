@@ -40,6 +40,8 @@ import id.handlips.ui.theme.poppins
 @Composable
 fun ForgotPasswordScreen(
     navController: NavHostController,
+    onCLickBack: () -> Unit,
+    onCLickSend: () -> Unit,
 ) {
     var email by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()

@@ -45,6 +45,10 @@ import id.handlips.utils.UiState
 @Composable
 fun LoginScreen(
     navController: NavHostController,
+    onClickLogin: () -> Unit,
+    onClickGoogle: () -> Unit,
+    onClickRegister: () -> Unit,
+    onClickForgotPassword: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     // State management
@@ -108,7 +112,7 @@ fun LoginScreen(
                 .padding(top = 5.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton(onClick = { navController.navigate("forgot_password") }) {
+            TextButton(onClick = { onClickForgotPassword() }) {
                 Text(
                     text = stringResource(R.string.forgot_password),
                     fontFamily = poppins,
@@ -158,7 +162,7 @@ fun LoginScreen(
                 fontSize = 16.sp,
                 color = Color.Gray
             )
-            TextButton(onClick = { navController.navigate("register") }) {
+            TextButton(onClick = { onClickRegister() }) {
                 Text(
                     text = stringResource(R.string.register),
                     fontFamily = poppins,
@@ -190,10 +194,7 @@ fun LoginScreen(
     if (showDialogSuccess) {
         DialogSuccess(
             onDismissRequest = {
-                navController.popBackStack()
-                navController.navigate("main") {
-                    popUpTo("login") { inclusive = true }
-                }
+                onClickLogin()
             },
             textSuccess = "Login successful!"
         )

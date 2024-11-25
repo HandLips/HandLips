@@ -33,6 +33,10 @@ import id.handlips.utils.UiState
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
+    onCLickBack: () -> Unit,
+    onCLickRegister: () -> Unit,
+    onCLickLogin: () -> Unit,
+    onCLickGoogle: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     // State management
@@ -51,7 +55,7 @@ fun RegisterScreen(
             topBar = {
                 TopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = { onCLickBack() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_arrow_back),
                                 contentDescription = "Back Icon"
@@ -130,7 +134,7 @@ fun RegisterScreen(
                 Spacer(Modifier.height(10.dp))
                 GoogleButton(
                     text = stringResource(R.string.register_with_google),
-                    onClick = { /* Implement Google Sign In */ }
+                    onClick = { onCLickGoogle() }
                 )
 
                 // Login Link
@@ -146,7 +150,7 @@ fun RegisterScreen(
                         fontSize = 16.sp,
                         color = Color.Gray
                     )
-                    TextButton(onClick = { navController.navigate("login") }) {
+                    TextButton(onClick = { onCLickLogin() }) {
                         Text(
                             text = stringResource(R.string.login),
                             fontFamily = poppins,
@@ -190,10 +194,7 @@ fun RegisterScreen(
     if (showDialogSuccess) {
         DialogSuccess(
             onDismissRequest = {
-                navController.popBackStack()
-                navController.navigate("login") {
-                    popUpTo("register") { inclusive = true }
-                }
+                onCLickRegister()
             },
             textSuccess = "Login successful!"
         )
