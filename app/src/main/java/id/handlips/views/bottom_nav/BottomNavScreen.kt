@@ -17,24 +17,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.handlips.navigation.BottomBarScreen
-import id.handlips.navigation.BottomNavGraph
+import id.handlips.navigation.graphs.BottomNavGraph
 import id.handlips.ui.theme.Blue
 
 @Composable
-fun BottomNavScreen(onLogout: () -> Unit) {
+fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            BottomNavGraph(onLogout, navController)
+            BottomNavGraph(navController = navController, onCLick = onCLickLogout, onBackLogin = onBackLogin)
         }
     }
 }
@@ -47,10 +45,8 @@ fun BottomBar(navController: NavHostController) {
         BottomBarScreen.Shortcut,
         BottomBarScreen.Profile
     )
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
 
     NavigationBar(
         containerColor = Blue,
