@@ -34,4 +34,10 @@
     <string name="error_password_at_least_8_characters">Error, Password at least 8 characters</string>
     <string name="feedback">Feedback</string>
     <string name="how_do_you_feel_about_using_this_app">How do you feel about using this app?</string>
+    <string name="mulai_berlangganan_sekarang">Mulai berlangganan sekarang!</string>
+    <string name="harga_yang_murah_untuk_manfaat_yang_lebih_banyak">Harga yang murah untuk manfaat yang  lebih banyak</string>
+    <string name="langganan">Langganan</string>
+    <string name="komunikasi_sepuasnya">Komunikasi Sepuasnya</string>
+    <string name="shortcut_komunikasi_lebih_banyak">Shortcut Komunikasi lebih banyak</string>
+    <string name="event">Event</string>
 </resources>

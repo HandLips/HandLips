@@ -49,7 +49,7 @@ import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), backLogin: () -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), backLogin: () -> Unit, onClickSubscripe: ()-> Unit, onClickEvent: ()-> Unit) {
     if (!viewModel.isLoggin()) {
         LaunchedEffect(Unit) {
             backLogin()
@@ -163,7 +163,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), backLogin: () -> Unit
 
                         Spacer(modifier = Modifier.height(24.dp))
                     }
-                    MenuSection()
+                    MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }
             }
@@ -216,7 +216,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), backLogin: () -> Unit
 }
 
 @Composable
-fun MenuSection() {
+fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,10 +226,9 @@ fun MenuSection() {
         CardMenu(
             modifier = Modifier.size(100.dp),
             id = R.drawable.ic_visibility,
-            title = "Event"
-        ) {
-            // Handle click event
-        }
+            title = "Event",
+            onClick = onClickEvent
+        )
 
         CardMenu(
             modifier = Modifier.size(100.dp),
@@ -242,10 +241,11 @@ fun MenuSection() {
         CardMenu(
             modifier = Modifier.size(100.dp),
             id = R.drawable.ic_arrow_back,
-            title = "Langganan"
-        ) {
-            // Handle click event
-        }
+            title = "Langganan",
+            onClick = {
+                onClickSubscripe()
+            }
+        )
     }
 }
 
