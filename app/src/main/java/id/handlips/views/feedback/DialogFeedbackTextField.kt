@@ -1,4 +1,4 @@
-package id.handlips.component.dialog
+package id.handlips.views.feedback
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -65,7 +65,7 @@ fun DialogFeedbackTextField(
                     modifier = Modifier.padding(top = 8.dp),
                 )
                 DescriptionTextField(
-                    label = "Saran",
+                    label = stringResource(R.string.saran),
                     onValueChange = { newValue ->
                         feedback = newValue
                     },

@@ -1,5 +1,6 @@
 package id.handlips.views.auth.login
 
+import android.content.Context
 import androidx.compose.foundation.background
 import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import dagger.hilt.android.qualifiers.ApplicationContext
 import id.handlips.R
 import id.handlips.component.button.GoogleButton
 import id.handlips.component.dialog.DialogError
@@ -49,8 +52,9 @@ fun LoginScreen(
     onClickGoogle: () -> Unit,
     onClickRegister: () -> Unit,
     onClickForgotPassword: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     // State management
     val uiState by viewModel.uiState.collectAsState()
     var showDialogSuccess by remember { mutableStateOf(false) }
@@ -129,7 +133,7 @@ fun LoginScreen(
                 if (email.isNotBlank() && password.isNotBlank()) {
                     viewModel.signIn(email, password)
                 } else {
-                    errorMessage = "Please fill all fields"
+                    errorMessage = context.getString(R.string.please_fill_all_fields)
                     showDialogError = true
                 }
             }
@@ -196,7 +200,7 @@ fun LoginScreen(
             onDismissRequest = {
                 onClickLogin()
             },
-            textSuccess = "Login successful!"
+            textSuccess = stringResource(R.string.login_successful)
         )
     }
 
