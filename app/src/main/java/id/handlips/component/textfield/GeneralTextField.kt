@@ -21,8 +21,9 @@ fun GeneralTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ){
-    Column(modifier = Modifier.padding(top = 15.dp)) {
+    Column(modifier) {
         Text(text = title, fontFamily = poppins, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         OutlinedTextField(
             value = value,

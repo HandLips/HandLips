@@ -72,7 +72,6 @@ fun HomeScreen(
                 is Resource.Loading -> {
                     loading = true
                 }
-
                 is Resource.Success -> {
                     loading = false
                     historyItems = listOf(resource.data.data)
@@ -139,7 +138,6 @@ fun HomeScreen(
                     )
                 }
             }
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -298,7 +296,6 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
         ) {
             // Handle click event
         }
-
         CardMenu(
             modifier = Modifier.size(100.dp),
             id = R.drawable.ic_arrow_back,

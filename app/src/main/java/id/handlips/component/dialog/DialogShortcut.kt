@@ -1,13 +1,17 @@
 package id.handlips.component.dialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +31,7 @@ import id.handlips.R
 import id.handlips.component.button.DoubleButton
 import id.handlips.component.textfield.DescriptionTextField
 import id.handlips.component.textfield.GeneralTextField
+import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
 
 
@@ -39,27 +44,29 @@ fun DialogShortcut(
     var sound by remember { mutableStateOf("") }
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(350.dp)
+                .wrapContentHeight()
                 .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .background(White)
+                    .padding(16.dp)
+                ,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(R.string.feedback),
+                    text = stringResource(R.string.komunikasi_cepat),
                     fontFamily = poppins,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = stringResource(R.string.how_do_you_feel_about_using_this_app),
+                    text = stringResource(R.string.add_shortcut),
                     fontFamily = poppins,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
@@ -68,20 +75,30 @@ fun DialogShortcut(
                     modifier = Modifier.padding(top = 8.dp),
                 )
                 GeneralTextField(
-                    title = "Title",
+                    title = stringResource(R.string.title),
                     onValueChange = { newValue ->
                         title = newValue
                     },
                     value = title,
                     label = "Enter title"
                 )
-                DescriptionTextField(
-                    label = "Saran",
-                    onValueChange = { newValue ->
-                        sound = newValue
-                    },
-                    value = sound
-                )
+                Column {
+                    Text(
+                        modifier = Modifier.padding(top = 10.dp),
+                        text = stringResource(R.string.text_suara),
+                        fontFamily = poppins,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                    DescriptionTextField(
+                        label = stringResource(R.string.masukan_text_suara),
+                        onValueChange = { newValue ->
+                            sound = newValue
+                        },
+                        value = sound
+                    )
+                }
                 DoubleButton(
                     onClickCancel = { onDismissRequest() },
                     onClickConfirm = {
