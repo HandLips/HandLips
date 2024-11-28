@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun GeminiScreen(modifier: Modifier = Modifier) {
-    Scaffold (modifier = modifier.fillMaxSize()){
-
+    Scaffold(modifier = modifier.fillMaxSize()) {
     }
 }

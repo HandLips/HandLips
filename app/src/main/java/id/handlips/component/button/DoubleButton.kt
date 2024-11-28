@@ -25,42 +25,46 @@ import id.handlips.ui.theme.White
 fun DoubleButton(
     onClickCancel: () -> Unit,
     onClickConfirm: () -> Unit,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Blue,
-        contentColor = White
-    )
+    buttonColors: ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = Blue,
+            contentColor = White,
+        ),
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Button(
             onClick = onClickCancel,
-            modifier = Modifier
-                .padding(top = 20.dp)
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = White,
-                contentColor = Blue
-            ),
-            shape = Shapes().small
+            modifier =
+                Modifier
+                    .padding(top = 20.dp)
+                    .height(50.dp),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = White,
+                    contentColor = Blue,
+                ),
+            shape = Shapes().small,
         ) {
             Text(
                 text = stringResource(R.string.cancel),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Spacer(modifier = Modifier.padding(start = 20.dp))
         Button(
             onClick = onClickConfirm,
-            modifier = Modifier
-                .padding(top = 20.dp)
-                .height(50.dp),
+            modifier =
+                Modifier
+                    .padding(top = 20.dp)
+                    .height(50.dp),
             colors = buttonColors,
-            shape = Shapes().small
+            shape = Shapes().small,
         ) {
             Text(
                 text = stringResource(R.string.confirm),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }

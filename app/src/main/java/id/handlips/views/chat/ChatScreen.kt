@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier) {
-    Scaffold (modifier = modifier.fillMaxSize()){
+    Scaffold(modifier = modifier.fillMaxSize()) {
         Text("Ini Chat")
     }
 }

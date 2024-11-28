@@ -1,6 +1,5 @@
 package id.handlips.views.auth.login
 
-import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,37 +28,36 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import id.handlips.R
 import id.handlips.component.button.GoogleButton
+import id.handlips.component.button.LongButton
 import id.handlips.component.textfield.EmailTextField
 import id.handlips.component.textfield.PasswordTextField
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.poppins
 
 @Composable
-fun LoginScreen(
-    navController: NavHostController
-) {
+fun LoginScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .verticalScroll(scrollState),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+                .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
-
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.hai),
                 fontFamily = poppins,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                modifier = Modifier.padding(bottom = 10.dp)
+                modifier = Modifier.padding(bottom = 10.dp),
             )
             Text(
                 text = stringResource(R.string.description_login),
@@ -67,7 +65,7 @@ fun LoginScreen(
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                color = Color.Gray
+                color = Color.Gray,
             )
         }
         EmailTextField(
@@ -76,58 +74,58 @@ fun LoginScreen(
             value = email,
             onValueChange = {
                 email = it
-            }
+            },
         )
         PasswordTextField(
             title = stringResource(R.string.password),
             label = stringResource(R.string.enter_password),
             value = password,
-            onValueChange = { password = it }
+            onValueChange = { password = it },
         )
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp),
-            horizontalArrangement = Arrangement.End
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp),
+            horizontalArrangement = Arrangement.End,
         ) {
             TextButton(
                 onClick = { navController.navigate("forgot_password") },
-
-                ) {
+            ) {
                 Text(
                     text = stringResource(R.string.forgot_password),
                     fontFamily = poppins,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
         }
         LongButton(
             text = stringResource(R.string.btn_login),
             onClick = {
-            }
+            },
         )
         HorizontalDivider(
             Modifier.padding(top = 30.dp),
             thickness = 1.dp,
-            color = Color.Gray
+            color = Color.Gray,
         )
         Spacer(Modifier.padding(top = 10.dp))
         GoogleButton(
             text = stringResource(R.string.btn_google_login),
-            onClick = {}
+            onClick = {},
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(R.string.don_t_have_an_account),
                 fontFamily = poppins,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
-                color = Color.Gray
+                color = Color.Gray,
             )
             TextButton(onClick = { navController.navigate("register") }) {
                 Text(
@@ -135,7 +133,7 @@ fun LoginScreen(
                     fontFamily = poppins,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Blue
+                    color = Blue,
                 )
             }
         }

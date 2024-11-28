@@ -11,11 +11,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class BottomBarScreen(
     val route: String,
     val title: String,
-    val icon: ImageVector
+    val icon: ImageVector,
 ) {
     object Home : BottomBarScreen("home", "Home", Icons.Outlined.Home)
-    object Chat : BottomBarScreen("chat", "Chat", Icons.Outlined.Email)
-    object Shortcut : BottomBarScreen("shortcut", "Shortcut", Icons.Default.Search)
-    object Profile : BottomBarScreen("profile", "Profile", Icons.Outlined.Person)
 
+    object Chat : BottomBarScreen("chat", "Chat", Icons.Outlined.Email)
+
+    object Shortcut : BottomBarScreen("shortcut", "Shortcut", Icons.Default.Search)
+
+    object Profile : BottomBarScreen("profile", "Profile", Icons.Outlined.Person)
 }
