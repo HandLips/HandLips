@@ -89,5 +89,13 @@ object MainModule {
         return HistoryRepository(apiService, context)
     }
 
+    @Provides
+    @Singleton
+    fun provideProfileRepository(
+        apiService: ApiService,
+    ): ProfileRepository {
+        return ProfileRepository(apiService)
+    }
+
 
 }

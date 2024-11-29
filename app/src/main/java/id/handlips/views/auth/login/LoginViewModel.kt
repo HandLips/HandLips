@@ -29,7 +29,4 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
 
         }
     }
-    fun getCurrentUser(): FirebaseUser? {
-        return authRepository.getCurrentUser()
-    }
 }

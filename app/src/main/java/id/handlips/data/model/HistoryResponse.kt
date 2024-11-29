@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class HistoryResponse(
 
 	@field:SerializedName("data")
-	val data: List<DataHistory> = listOf() ,
+	val data: List<DataHistory> = listOf(),
 
 	@field:SerializedName("success")
 	val success: Boolean

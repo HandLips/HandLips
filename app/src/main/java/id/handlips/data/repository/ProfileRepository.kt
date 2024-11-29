@@ -7,7 +7,7 @@ import id.handlips.data.remote.ApiService
 import id.handlips.utils.Resource
 import javax.inject.Inject
 
-class ProfileRepository @Inject constructor(private val apiService: ApiService, private val authRepository: AuthRepository) {
+class ProfileRepository @Inject constructor(private val apiService: ApiService) {
 
     suspend fun signUp(name: String, email: String): Resource<ProfileResponse> {
         return try {
@@ -22,17 +22,17 @@ class ProfileRepository @Inject constructor(private val apiService: ApiService, 
         }
     }
 
-    fun getProfile(): LiveData<Resource<ProfileResponse>> = liveData {
+    fun getProfile(email: String): LiveData<Resource<ProfileResponse>> = liveData {
         emit(Resource.Loading)
         try {
-            val response = apiService.getProfile(authRepository.getCurrentUser()?.email.toString())
+            val response = apiService.getProfile(email)
             if (response.success) {
                 emit(Resource.Success(response))
             } else {
                 emit(Resource.Error(response.message))
             }
         } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "An error occurred"))
+            emit(Resource.Error(e.message ?: "An error occurred during fetching profile"))
         }
     }
 }

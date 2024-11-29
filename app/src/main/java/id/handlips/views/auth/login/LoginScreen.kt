@@ -48,7 +48,6 @@ import id.handlips.utils.UiState
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
     onClickLogin: () -> Unit,
     onClickGoogle: () -> Unit,
     onClickRegister: () -> Unit,
@@ -133,8 +132,6 @@ fun LoginScreen(
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
                     viewModel.signIn(email, password)
-                    viewModel.getCurrentUser()?.email
-                    Log.d("TestingUID", "${viewModel.getCurrentUser()?.uid}")
                 } else {
                     errorMessage = context.getString(R.string.please_fill_all_fields)
                     showDialogError = true
@@ -153,7 +150,9 @@ fun LoginScreen(
         // Google Sign In
         GoogleButton(
             text = stringResource(R.string.btn_google_login),
-            onClick = { /* Implement Google Sign In */ }
+            onClick = {
+                onClickGoogle()
+            }
         )
 
         // Register Link

@@ -26,7 +26,6 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            // Langkah 1: Buat akun di Firebase
             val resultFirebase = authRepository.createAccount(email, password)
             if (resultFirebase is Resource.Error) {
                 _uiState.value = UiState.Error(resultFirebase.message)
@@ -40,10 +39,6 @@ class RegisterViewModel @Inject constructor(
                 is Resource.Error -> UiState.Error(resultApi.message)
             }
         }
-    }
-
-    fun getCurrentUser(): FirebaseUser? {
-        return authRepository.getCurrentUser()
     }
 
 }

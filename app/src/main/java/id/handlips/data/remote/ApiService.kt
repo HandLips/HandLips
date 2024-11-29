@@ -6,6 +6,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("history")
@@ -18,11 +19,9 @@ interface ApiService {
         @Field("email") email: String,
     ): ProfileResponse
 
-    @FormUrlEncoded
-    @POST("profile")
+    @GET("profile/{email}")
     suspend fun getProfile(
-        @Field("email") email: String,
+        @Path("email") email: String,
     ): ProfileResponse
-
 
 }
