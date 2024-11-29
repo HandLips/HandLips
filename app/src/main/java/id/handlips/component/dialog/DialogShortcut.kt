@@ -60,7 +60,7 @@ fun DialogShortcut(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(R.string.komunikasi_cepat),
+                    text = "Shortcut",
                     fontFamily = poppins,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

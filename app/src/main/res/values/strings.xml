@@ -68,13 +68,9 @@
     <string name="rp_15_000">Rp. 15.000</string>
     <string name="eventicle">Eventicle</string>
     <string name="history">History</string>
-<<<<<<< HEAD
-    <string name="komunikasi_cepat">Komunikasi Cepat</string>
     <string name="add_shortcut">Masukan title dan kalimat untuk dijadikan komunikasi cepat</string>
     <string name="text_suara">Text Suara</string>
     <string name="title">Title</string>
     <string name="masukan_text_suara">Masukan text suara</string>
-=======
     <string name="guest">Guest</string>
->>>>>>> e3fca7a311f4a79345ba8a44bd09abc403e0dad4
 </resources>
