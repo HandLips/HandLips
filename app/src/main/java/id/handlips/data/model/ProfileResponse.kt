@@ -11,7 +11,7 @@ data class ProfileResponse(
 	val message: String,
 
 	@field:SerializedName("data")
-	val data: Data?
+	val data: DataProfile
 )
 
 data class DataProfile(
@@ -25,9 +25,9 @@ data class DataProfile(
 	val email: String,
 
 	@field:SerializedName("profile_picture_url")
-	val profile_picture_url: String,
+	val profilePictureUrl: String?,
 
 	@field:SerializedName("createdAt")
-	val created_at: String,
+	val createdAt: String,
 )
 

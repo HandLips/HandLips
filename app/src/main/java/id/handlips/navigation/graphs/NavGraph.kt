@@ -20,7 +20,7 @@ fun NavGraph(navController: NavHostController, isOnboardingCompleted: Boolean) {
     val startDestination = if (isOnboardingCompleted) Route.HOME else Route.ONBOARDING
     NavHost(
         navController = navController,
-        startDestination = Route.AUTHENTICATION,
+        startDestination = Route.HOME,
         route = Route.ROOT
     ) {
         composable(route = Route.HOME) {

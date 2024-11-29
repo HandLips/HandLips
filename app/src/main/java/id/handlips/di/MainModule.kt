@@ -11,6 +11,7 @@ import id.handlips.BuildConfig
 import id.handlips.data.remote.ApiService
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.HistoryRepository
+import id.handlips.data.repository.ProfileRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -76,6 +77,14 @@ object MainModule {
         @ApplicationContext context: Context
     ): HistoryRepository {
         return HistoryRepository(apiService, context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(
+        apiService: ApiService,
+    ): ProfileRepository {
+        return ProfileRepository(apiService)
     }
 
 

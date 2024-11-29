@@ -21,4 +21,18 @@ class ProfileRepository @Inject constructor(private val apiService: ApiService) 
             Resource.Error(e.message ?: "An error occurred during signup")
         }
     }
+
+    fun getProfile(email: String): LiveData<Resource<ProfileResponse>> = liveData {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getProfile(email)
+            if (response.success) {
+                emit(Resource.Success(response))
+            } else {
+                emit(Resource.Error(response.message))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An error occurred during fetching profile"))
+        }
+    }
 }
