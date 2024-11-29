@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             HandlipsTheme {
                 val navController = rememberNavController()
-                NavGraph(navController, true)
+                NavGraph(navController)
             }
         }
     }

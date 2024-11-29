@@ -6,13 +6,13 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.HistoryRepository
+import id.handlips.data.repository.ProfileRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val authRepository: AuthRepository, private val historyRepository: HistoryRepository) : ViewModel() {
-    fun getCurrentUser() : FirebaseUser? {
-        return authRepository.getCurrentUser()
-    }
+class HomeViewModel @Inject constructor(private val authRepository: AuthRepository, private val historyRepository: HistoryRepository, private val profileRepository: ProfileRepository) : ViewModel() {
+
+    fun getProfile() = profileRepository.getProfile()
 
     fun isLoggin(): Boolean {
         return authRepository.isUserAuthenticated()

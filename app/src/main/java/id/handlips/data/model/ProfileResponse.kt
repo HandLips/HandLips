@@ -11,7 +11,7 @@ data class ProfileResponse(
 	val message: String,
 
 	@field:SerializedName("data")
-	val data: Data?
+	val data: DataProfile?
 )
 
 data class DataProfile(

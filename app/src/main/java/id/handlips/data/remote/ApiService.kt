@@ -18,5 +18,11 @@ interface ApiService {
         @Field("email") email: String,
     ): ProfileResponse
 
+    @FormUrlEncoded
+    @POST("profile")
+    suspend fun getProfile(
+        @Field("email") email: String,
+    ): ProfileResponse
+
 
 }

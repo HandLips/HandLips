@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +48,8 @@ import id.handlips.R
 import id.handlips.component.card.CardComponent
 import id.handlips.component.dialog.DialogError
 import id.handlips.component.loading.LoadingAnimation
-import id.handlips.data.model.Data
+import id.handlips.data.model.DataHistory
+import id.handlips.data.model.DataProfile
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
@@ -61,27 +63,42 @@ fun HomeScreen(
     onClickSubscripe: () -> Unit,
     onClickEvent: () -> Unit
 ) {
-    val uid = viewModel.getCurrentUser()?.uid
-    var historyItems by remember { mutableStateOf<List<Data>>(emptyList()) }
+    var profile by rememberSaveable { mutableStateOf<DataProfile?>(null) }
+    var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
-        viewModel.getHistory().observeForever { resource ->
-            when (resource) {
+//        viewModel.getHistory().observeForever { resource ->
+//            when (resource) {
+//                is Resource.Loading -> {
+//                    loading = true
+//                }
+//                is Resource.Success -> {
+//                    loading = false
+//                    historyItems = listOf(resource.data.data)
+//                }
+//
+//                is Resource.Error -> {
+//                    loading = false
+//                    dialogError = true
+//                    textError = resource.message
+//                }
+//            }
+//        }
+        viewModel.getProfile().observeForever {
+            when (it) {
                 is Resource.Loading -> {
                     loading = true
                 }
-
                 is Resource.Success -> {
                     loading = false
-                    historyItems = listOf(resource.data.data)
+                    profile = it.data.data
                 }
-
                 is Resource.Error -> {
                     loading = false
                     dialogError = true
-                    textError = resource.message
+                    textError = it.message
                 }
             }
         }
@@ -122,7 +139,7 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.hai_user,
-                            viewModel.getCurrentUser()?.email!!
+                            profile?.name ?: stringResource(R.string.guest)
                         ),
                         fontSize = 12.sp,
                         fontFamily = poppins,

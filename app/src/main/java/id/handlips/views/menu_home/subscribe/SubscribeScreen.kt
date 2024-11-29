@@ -1,4 +1,4 @@
-package id.handlips.views.subscribe
+package id.handlips.views.menu_home.subscribe
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
