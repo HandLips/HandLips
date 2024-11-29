@@ -77,7 +77,7 @@ object MainModule {
         apiService: ApiService,
         auth: AuthRepository
     ): ProfileRepository {
-        return ProfileRepository (apiService, auth)
+        return ProfileRepository (apiService)
     }
 
     @Provides
@@ -87,14 +87,6 @@ object MainModule {
         @ApplicationContext context: Context
     ): HistoryRepository {
         return HistoryRepository(apiService, context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideProfileRepository(
-        apiService: ApiService,
-    ): ProfileRepository {
-        return ProfileRepository(apiService)
     }
 
 

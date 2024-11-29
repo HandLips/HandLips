@@ -23,5 +23,5 @@ data class DataHistory(
 	val title: String,
 
 	@field:SerializedName("message")
-	val message: String
+	val message: List<String>?
 )
