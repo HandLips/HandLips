@@ -95,8 +95,7 @@ fun DialogSubscribe(
                         Spacer(Modifier.padding(start = 5.dp))
                         Text(text = stringResource(R.string.komunikasi_sepuasnya), fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 12.sp)
                     }
-                    Row (
-                    ){
+                    Row {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = null,

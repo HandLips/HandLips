@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 data class HistoryResponse(
 
 	@field:SerializedName("data")
-	val data: Data,
+	val data: List<DataHistory> = listOf(),
 
 	@field:SerializedName("success")
 	val success: Boolean
 )
 
-data class Data(
+data class DataHistory(
 
 	@field:SerializedName("created_at")
 	val createdAt: String,
@@ -23,5 +23,5 @@ data class Data(
 	val title: String,
 
 	@field:SerializedName("message")
-	val message: String
+	val message: List<String>?
 )

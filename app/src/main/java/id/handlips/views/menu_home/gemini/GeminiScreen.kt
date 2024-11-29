@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package id.handlips.views.gemini
+package id.handlips.views.menu_home.gemini
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

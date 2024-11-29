@@ -17,7 +17,6 @@ fun NavGraphBuilder.authNavGraph(
     ) {
         composable(route = Screen.Login.route) {
             LoginScreen(
-                navController = navController,
                 onClickLogin = {
                     navController.popBackStack()
                     navController.navigate(Route.HOME)
@@ -29,25 +28,28 @@ fun NavGraphBuilder.authNavGraph(
         }
         composable(route = Screen.Register.route) {
             RegisterScreen(
-                navController = navController,
-                onCLickBack = { navController.popBackStack() },
-                onCLickRegister = {
+                onClickBack = { navController.popBackStack() },
+                onClickRegister = {
                     navController.popBackStack()
                 },
-                onCLickLogin = { navController.popBackStack() },
-                onCLickGoogle = {})
+                onClickLogin = { navController.popBackStack() },
+                onClickGoogle = {}
+            )
         }
         composable(route = Screen.ForgotPassword.route) {
             ForgotPasswordScreen(
                 navController = navController,
                 onCLickBack = { navController.popBackStack() },
-                onCLickSend = {})
+                onCLickSend = {}
+            )
         }
     }
 }
+
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Register : Screen("register")
     object ForgotPassword : Screen("forgot_password")
+    object OnBoarding : Screen("onboarding")
 }

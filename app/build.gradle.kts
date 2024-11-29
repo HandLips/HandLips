@@ -21,6 +21,7 @@ android {
 
         buildConfigField("String", "BASE_URL", "\"https://capstone-api-442707.et.r.appspot.com/\"")
         buildConfigField("String", "VERTEX_API", "\"https://aiplatform.googleapis.com/\"")
+//        buildConfigField("String", "GEMINI_API", "AIzaSyCvtp_cv6EzlNcXTxGxSxxH52Dx05OZPhU")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -108,6 +109,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
+<<<<<<< HEAD
     // Media3
     implementation(libs.androidx.media3.exoplayer)
     // For building media playback UIs (opsional, jika ingin menggunakan built-in UI dari Media3)
@@ -115,4 +117,13 @@ dependencies {
     // Common functionality for media components
     implementation(libs.androidx.media3.common)
 
+=======
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
+    // sharePreference
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.accompanist.pager)
+    implementation(libs.google.accompanist.pager.indicators)
+>>>>>>> e3fca7a311f4a79345ba8a44bd09abc403e0dad4
 }
