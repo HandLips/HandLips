@@ -21,6 +21,7 @@ android {
 
         buildConfigField("String", "BASE_URL", "\"https://capstone-api-442707.et.r.appspot.com/\"")
         buildConfigField("String", "VERTEX_API", "\"https://aiplatform.googleapis.com/\"")
+//        buildConfigField("String", "GEMINI_API", "AIzaSyCvtp_cv6EzlNcXTxGxSxxH52Dx05OZPhU")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -108,4 +109,11 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
+    // sharePreference
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.accompanist.pager)
+    implementation(libs.google.accompanist.pager.indicators)
 }

@@ -1,6 +1,7 @@
 package id.handlips.views.auth.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
@@ -132,6 +133,8 @@ fun LoginScreen(
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
                     viewModel.signIn(email, password)
+                    viewModel.getCurrentUser()?.email
+                    Log.d("TestingUID", "${viewModel.getCurrentUser()?.uid}")
                 } else {
                     errorMessage = context.getString(R.string.please_fill_all_fields)
                     showDialogError = true

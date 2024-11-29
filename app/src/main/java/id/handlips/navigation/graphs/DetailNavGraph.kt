@@ -28,5 +28,4 @@ sealed class DetailsScreen(val route: String) {
     object Subscribe : DetailsScreen(route = "SUBSCRIPE")
     object History : DetailsScreen(route = "HISTORY")
     object Event : DetailsScreen(route = "EVENT")
-
 }

@@ -1,13 +1,16 @@
 package id.handlips.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import id.handlips.BuildConfig
 import id.handlips.data.remote.ApiService
 import id.handlips.data.repository.AuthRepository
+import id.handlips.data.repository.HistoryRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,6 +67,15 @@ object MainModule {
         auth: FirebaseAuth
     ): AuthRepository {
         return AuthRepository(auth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHistoryRepository(
+        apiService: ApiService,
+        @ApplicationContext context: Context
+    ): HistoryRepository {
+        return HistoryRepository(apiService, context)
     }
 
 

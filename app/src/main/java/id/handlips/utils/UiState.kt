@@ -2,9 +2,9 @@ package id.handlips.utils
 
 import com.google.firebase.auth.FirebaseUser
 
-sealed class UiState {
-    object Initial : UiState()
-    object Loading : UiState()
-    data class Success(val user: FirebaseUser) : UiState()
-    data class Error(val message: String) : UiState()
+sealed class UiState<out T> {
+    object Initial : UiState<Nothing>()
+    object Loading : UiState<Nothing>()
+    data class Success<T>(val data: T) : UiState<T>()
+    data class Error(val message: String) : UiState<Nothing>()
 }
