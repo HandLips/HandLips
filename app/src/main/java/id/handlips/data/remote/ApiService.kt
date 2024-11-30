@@ -1,7 +1,10 @@
 package id.handlips.data.remote
 
+import id.handlips.data.model.FeedbackResponse
 import id.handlips.data.model.HistoryResponse
+import id.handlips.data.model.ListSoundResponse
 import id.handlips.data.model.ProfileResponse
+import id.handlips.data.model.SoundResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
