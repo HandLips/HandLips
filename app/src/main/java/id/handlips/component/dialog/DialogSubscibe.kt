@@ -50,8 +50,7 @@ fun DialogSubscribe(
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
             modifier = modifier
-                .wrapContentHeight()
-                .padding(16.dp),
+                .wrapContentHeight(),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = cardBackgroundColor

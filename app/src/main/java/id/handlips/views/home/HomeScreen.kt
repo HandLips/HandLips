@@ -171,6 +171,7 @@ fun HomeScreen(
                     )
                 }
             }
+
             // Card Section
             Box(
                 modifier = Modifier
@@ -237,11 +238,11 @@ fun HomeScreen(
                             }
                         }
                     }
-                    Spacer(Modifier.padding(bottom = 15.dp))
                     MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }
             }
+
             // Main Content
             Column(
                 modifier = Modifier

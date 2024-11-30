@@ -1,6 +1,5 @@
 package id.handlips.data.remote
 
-import id.handlips.data.model.FeedbackResponse
 import id.handlips.data.model.HistoryResponse
 import id.handlips.data.model.ProfileResponse
 import retrofit2.http.Field
@@ -13,6 +12,11 @@ interface ApiService {
     @GET("history")
     suspend fun getHistory(): HistoryResponse
 
+    @GET("soundboards/{email}")
+    suspend fun getSound(
+        @Path("email") email: String,
+    ): ListSoundResponse
+
     @FormUrlEncoded
     @POST("profile")
     suspend fun signUp(
@@ -24,6 +28,14 @@ interface ApiService {
     suspend fun getProfile(
         @Path("email") email: String,
     ): ProfileResponse
+
+    @FormUrlEncoded
+    @POST("soundboards")
+    suspend fun createSound(
+        @Field("title") title: String,
+        @Field("text") text: String,
+        @Field("email") email: String,
+    ): SoundResponse
 
     @FormUrlEncoded
     @POST("feedback")

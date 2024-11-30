@@ -107,6 +107,13 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
+    // Media3
+    implementation(libs.androidx.media3.exoplayer)
+    // For building media playback UIs (opsional, jika ingin menggunakan built-in UI dari Media3)
+    implementation(libs.androidx.media3.ui)
+    // Common functionality for media components
+    implementation(libs.androidx.media3.common)
+
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 

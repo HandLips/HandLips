@@ -38,8 +38,7 @@ fun DialogSuccess(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
-                .wrapContentHeight()
-                .padding(16.dp),
+                .wrapContentHeight(),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -49,7 +48,7 @@ fun DialogSuccess(
             ) {
                 // Title
                 Text(
-                    text = stringResource(R.string.oops),
+                    text = stringResource(R.string.success),
                     fontFamily = poppins,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -78,7 +77,7 @@ fun DialogSuccess(
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     LongButton(
-                        onClick = { onDismissRequest() },
+                        onClick = onDismissRequest,
                         text = stringResource(R.string.done),
                         buttonColors = buttonColors(
                             containerColor = Green,

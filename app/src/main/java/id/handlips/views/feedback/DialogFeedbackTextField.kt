@@ -38,8 +38,7 @@ fun DialogFeedbackTextField(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(350.dp)
-                .padding(16.dp),
+                .height(350.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
