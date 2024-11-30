@@ -2,10 +2,22 @@ package id.handlips.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class SoundResponse(
+data class ListSoundResponse(
 
 	@field:SerializedName("data")
 	val data: List<DataItem> = listOf(),
+
+	@field:SerializedName("success")
+	val success: Boolean,
+
+	@field:SerializedName("message")
+	val message: String
+)
+
+data class SoundResponse(
+
+	@field:SerializedName("data")
+	val data: DataItem,
 
 	@field:SerializedName("success")
 	val success: Boolean,

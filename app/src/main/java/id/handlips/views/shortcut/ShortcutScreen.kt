@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,20 +57,28 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
     var textError by remember { mutableStateOf("") }
     var listSound by remember { mutableStateOf<List<DataItem>>(emptyList()) }
     var dialogAddSound by remember { mutableStateOf(false) }
+    var title by remember { mutableStateOf("") }
+    var sound by remember { mutableStateOf("") }
+    var notFound by remember { mutableStateOf(false) }
+    val getEmail = viewModel.getEmail()
+    var refreshTrigger by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.getSound().observeForever { resource ->
+    Log.i("EmailSekarang", getEmail)
+    LaunchedEffect(refreshTrigger) {
+        viewModel.getSound(getEmail).observeForever { resource ->
             when (resource) {
                 is Resource.Loading -> {
                     loading = true
                 }
+
                 is Resource.Success -> {
                     loading = false
                     listSound = resource.data.data
                 }
+
                 is Resource.Error -> {
                     loading = false
-                    dialogError = true
+                    notFound = true
                     textError = resource.message
                 }
             }
@@ -83,15 +92,26 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
     }
     if (dialogAddSound) {
         DialogShortcut(
+            title = title,
+            sound = sound,
+            onTitleChange = {
+                title = it
+            },
+            onSoundChange = {
+                sound = it
+            },
             onDismissRequest = {
                 dialogAddSound = false
             },
             onConfirm = {
-                /* Todo Add Sound */
-            }
+                viewModel.createSound(title, sound)
+                refreshTrigger = !refreshTrigger
+                dialogAddSound = false
+            },
         )
     }
-    Scaffold (modifier = modifier.fillMaxSize(),
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -106,7 +126,7 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
                 )
             }
         },
-        ){paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,7 +134,7 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
                 .padding(16.dp),
         ) {
             Text(
-                text = "Komunikasi Cepat",
+                text = stringResource(R.string.komunikasi_cepat),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 25.dp)
@@ -124,7 +144,8 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
                 onError = {
                     dialogError = true
                     textError = it
-                }
+                },
+                notFound = notFound
             )
         }
     }
@@ -208,12 +229,12 @@ private fun SoundCard(
                     mediaPlayer.setOnErrorListener { _, what, extra ->
                         preparationTimeout.cancel()
                         isPreparing = false
-                        val errorMessage = when(what) {
+                        val errorMessage = when (what) {
                             MediaPlayer.MEDIA_ERROR_UNKNOWN -> "Unknown error occurred"
                             MediaPlayer.MEDIA_ERROR_SERVER_DIED -> "Server died"
                             else -> "Error code: $what"
                         }
-                        val extraMessage = when(extra) {
+                        val extraMessage = when (extra) {
                             MediaPlayer.MEDIA_ERROR_IO -> "IO error"
                             MediaPlayer.MEDIA_ERROR_MALFORMED -> "Malformed media"
                             MediaPlayer.MEDIA_ERROR_UNSUPPORTED -> "Unsupported format"
@@ -221,7 +242,10 @@ private fun SoundCard(
                             else -> "Extra code: $extra"
                         }
 
-                        Log.e(TAG, "MediaPlayer error for ${sound.text} - $errorMessage ($extraMessage)")
+                        Log.e(
+                            TAG,
+                            "MediaPlayer error for ${sound.text} - $errorMessage ($extraMessage)"
+                        )
                         isPlaying = false
                         mediaPlayer.reset()
                         onError("Error playing audio: $errorMessage - $extraMessage")
@@ -314,8 +338,17 @@ private fun AudioControls(
 private fun SoundGrid(
     modifier: Modifier = Modifier,
     sounds: List<DataItem>,
-    onError: (String) -> Unit = {}
+    onError: (String) -> Unit = {},
+    notFound: Boolean
 ) {
+    if (notFound) {
+        Text(
+            text = "Tidak ada data",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 25.dp)
+        )
+    }
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),

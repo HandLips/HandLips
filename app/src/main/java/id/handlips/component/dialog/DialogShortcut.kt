@@ -39,9 +39,12 @@ import id.handlips.ui.theme.poppins
 fun DialogShortcut(
     onDismissRequest: () -> Unit,
     onConfirm: (String) -> Unit,
+    title: String,
+    sound: String,
+    onTitleChange: (String) -> Unit,
+    onSoundChange: (String) -> Unit
 ) {
-    var title by remember { mutableStateOf("") }
-    var sound by remember { mutableStateOf("") }
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             shape = RoundedCornerShape(16.dp),
@@ -54,8 +57,7 @@ fun DialogShortcut(
             Column(
                 modifier = Modifier
                     .background(White)
-                    .padding(16.dp)
-                ,
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -76,9 +78,7 @@ fun DialogShortcut(
                 )
                 GeneralTextField(
                     title = stringResource(R.string.title),
-                    onValueChange = { newValue ->
-                        title = newValue
-                    },
+                    onValueChange = onTitleChange,
                     value = title,
                     label = "Enter title"
                 )
@@ -93,9 +93,7 @@ fun DialogShortcut(
                     )
                     DescriptionTextField(
                         label = stringResource(R.string.masukan_text_suara),
-                        onValueChange = { newValue ->
-                            sound = newValue
-                        },
+                        onValueChange = onSoundChange,
                         value = sound
                     )
                 }
