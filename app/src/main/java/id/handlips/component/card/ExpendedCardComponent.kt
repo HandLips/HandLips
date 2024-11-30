@@ -75,7 +75,7 @@ fun ExpendedCardComponent(
             Text(
                 text = title,
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = poppins
                 )

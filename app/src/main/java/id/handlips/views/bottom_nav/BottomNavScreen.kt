@@ -26,13 +26,32 @@ import id.handlips.navigation.graphs.BottomNavGraph
 import id.handlips.ui.theme.Blue
 
 @Composable
-fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit, onClickSubscribe: () -> Unit, onClickEvent: () -> Unit) {
+fun BottomNavScreen(
+    onCLickLogout: () -> Unit,
+    onBackLogin: () -> Unit,
+    onClickSubscribe: () -> Unit,
+    onClickEvent: () -> Unit,
+    onClickGuide: () -> Unit,
+    onClickLangganan: () -> Unit,
+    onClickCustomerService: () -> Unit,
+    onClickGantiPassword: () -> Unit
+) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            BottomNavGraph(navController = navController, onCLick = onCLickLogout, onBackLogin = onBackLogin, onClickSubscribe = onClickSubscribe, onClickEvent = onClickEvent)
+            BottomNavGraph(
+                navController = navController,
+                onCLick = onCLickLogout,
+                onBackLogin = onBackLogin,
+                onClickSubscribe = onClickSubscribe,
+                onClickEvent = onClickEvent,
+                onClickGuide = onClickGuide,
+                onClickLangganan = onClickLangganan,
+                onClickCustomerService = onClickCustomerService,
+                onClickGantiPassword = onClickGantiPassword
+            )
         }
     }
 }
@@ -50,7 +69,8 @@ fun BottomBar(navController: NavHostController) {
 
     NavigationBar(
         containerColor = Blue,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
+        modifier = Modifier
+            .padding(horizontal = 10.dp, vertical = 10.dp)
             .height(65.dp)
             .clip(RoundedCornerShape(16.dp)),
         tonalElevation = 8.dp

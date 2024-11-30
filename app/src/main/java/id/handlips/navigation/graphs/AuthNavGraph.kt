@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import id.handlips.views.auth.change_password.ChangePasswordScreen
 import id.handlips.views.auth.forgot_password.ForgotPasswordScreen
 import id.handlips.views.auth.login.LoginScreen
 import id.handlips.views.auth.register.RegisterScreen
@@ -43,6 +44,13 @@ fun NavGraphBuilder.authNavGraph(
                 onCLickSend = {}
             )
         }
+        composable(route= Screen.ChangePassword.route) {
+            ChangePasswordScreen(
+                navController = navController,
+                onCLickBack = { navController.popBackStack() },
+                onCLickSend = {}
+            )
+        }
     }
 }
 
@@ -52,4 +60,5 @@ sealed class Screen(val route: String) {
     object Register : Screen("register")
     object ForgotPassword : Screen("forgot_password")
     object OnBoarding : Screen("onboarding")
+    object ChangePassword : Screen("change_password")
 }
