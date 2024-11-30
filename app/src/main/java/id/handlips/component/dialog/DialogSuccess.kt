@@ -79,7 +79,7 @@ fun DialogSuccess(
                 ) {
                     LongButton(
                         onClick = { onDismissRequest() },
-                        text = "Done",
+                        text = stringResource(R.string.done),
                         buttonColors = buttonColors(
                             containerColor = Green,
                             contentColor = Color.White

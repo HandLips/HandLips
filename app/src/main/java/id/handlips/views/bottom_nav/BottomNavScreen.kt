@@ -26,13 +26,13 @@ import id.handlips.navigation.graphs.BottomNavGraph
 import id.handlips.ui.theme.Blue
 
 @Composable
-fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit) {
+fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit, onClickSubscribe: () -> Unit, onClickEvent: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            BottomNavGraph(navController = navController, onCLick = onCLickLogout, onBackLogin = onBackLogin)
+            BottomNavGraph(navController = navController, onCLick = onCLickLogout, onBackLogin = onBackLogin, onClickSubscribe = onClickSubscribe, onClickEvent = onClickEvent)
         }
     }
 }

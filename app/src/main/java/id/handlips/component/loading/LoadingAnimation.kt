@@ -64,7 +64,7 @@ fun LoadingAnimation(
     Row(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White.copy(alpha = 0.7f)),
+            .background(Color.White.copy(alpha = 0.5f)),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {

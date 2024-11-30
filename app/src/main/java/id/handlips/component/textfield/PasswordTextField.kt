@@ -40,7 +40,7 @@ fun PasswordTextField(
                 isError = newValue.length < 8
             },
             isError = isError,
-            label = {
+            placeholder = {
                 Text(
                     text = label,
                     fontFamily = poppins,

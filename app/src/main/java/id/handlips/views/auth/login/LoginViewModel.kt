@@ -21,6 +21,7 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
             _uiState.value = UiState.Loading
             val result = authRepository.signIn(email, password)
             _uiState.value = when (result) {
+                is Resource.Loading -> UiState.Loading
                 is Resource.Success -> UiState.Success(result.data)
                 is Resource.Error -> UiState.Error(result.message)
             }

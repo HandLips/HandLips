@@ -13,14 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import id.handlips.R
 import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
 
 @Composable
-fun CardComponent(modifier: Modifier = Modifier.padding(bottom = 8.dp), onClick: () -> Unit, title: String, sumChat: String, date: String) {
+fun CardComponent(modifier: Modifier = Modifier.padding(bottom = 10.dp), onClick: () -> Unit, title: String, sumChat: String, date: String) {
     Card(
         modifier = modifier,
         onClick = onClick,
@@ -45,7 +47,7 @@ fun CardComponent(modifier: Modifier = Modifier.padding(bottom = 8.dp), onClick:
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$sumChat Pesan",
+                    text = stringResource(R.string.pesan, sumChat),
                     color = Color.Black,
                     fontFamily = poppins,
                     fontSize = 12.sp,

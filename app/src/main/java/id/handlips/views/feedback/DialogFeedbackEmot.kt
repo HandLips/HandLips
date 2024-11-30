@@ -1,4 +1,4 @@
-package id.handlips.component.dialog
+package id.handlips.views.feedback
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

@@ -25,10 +25,16 @@ import id.handlips.ui.theme.White
 fun DoubleButton(
     onClickCancel: () -> Unit,
     onClickConfirm: () -> Unit,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(
+    buttonConfirmColors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = Blue,
         contentColor = White
-    )
+    ),
+    buttonCancelColors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = White,
+        contentColor = Blue
+    ),
+    textCancel: String = stringResource(R.string.cancel),
+    textConfirm: String = stringResource(R.string.confirm)
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Button(
@@ -36,14 +42,11 @@ fun DoubleButton(
             modifier = Modifier
                 .padding(top = 20.dp)
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = White,
-                contentColor = Blue
-            ),
+            colors = buttonCancelColors,
             shape = Shapes().small
         ) {
             Text(
-                text = stringResource(R.string.cancel),
+                text = textCancel,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -54,11 +57,11 @@ fun DoubleButton(
             modifier = Modifier
                 .padding(top = 20.dp)
                 .height(50.dp),
-            colors = buttonColors,
+            colors = buttonConfirmColors,
             shape = Shapes().small
         ) {
             Text(
-                text = stringResource(R.string.confirm),
+                text = textConfirm,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )

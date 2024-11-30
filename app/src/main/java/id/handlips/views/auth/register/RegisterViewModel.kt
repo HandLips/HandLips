@@ -22,6 +22,7 @@ class RegisterViewModel @Inject constructor(private val authRepository: AuthRepo
             _uiState.value = UiState.Loading
             val result = authRepository.createAccount(email, password)
             _uiState.value = when (result) {
+                is Resource.Loading -> UiState.Loading
                 is Resource.Success -> UiState.Success(result.data)
                 is Resource.Error -> UiState.Error(result.message)
             }

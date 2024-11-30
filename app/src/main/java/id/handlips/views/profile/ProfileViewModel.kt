@@ -6,14 +6,16 @@ import id.handlips.data.repository.AuthRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val authRepository: AuthRepository): ViewModel() {
-    fun logout(): Boolean {
-        return try {
-            authRepository.logout()
-            true
-        } catch (e: Exception) {
-            false
-        }
+class ProfileViewModel
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+    ) : ViewModel() {
+        fun logout(): Boolean =
+            try {
+                authRepository.logout()
+                true
+            } catch (e: Exception) {
+                false
+            }
     }
-
-}

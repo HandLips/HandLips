@@ -29,7 +29,7 @@ fun GeneralTextField(
             onValueChange = { newValue ->
                 onValueChange(newValue)
             },
-            label = { Text(text = label, fontFamily = poppins, fontWeight = FontWeight.Normal, color = Color.Gray) },
+            placeholder = { Text(text = label, fontFamily = poppins, fontWeight = FontWeight.Normal, color = Color.Gray) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )

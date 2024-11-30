@@ -1,5 +1,6 @@
 package id.handlips.views.auth.register
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import dagger.hilt.android.qualifiers.ApplicationContext
 import id.handlips.R
 import id.handlips.component.button.GoogleButton
 import id.handlips.component.button.LongButton
@@ -37,8 +40,9 @@ fun RegisterScreen(
     onCLickRegister: () -> Unit,
     onCLickLogin: () -> Unit,
     onCLickGoogle: () -> Unit,
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: RegisterViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     // State management
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -58,7 +62,7 @@ fun RegisterScreen(
                         IconButton(onClick = { onCLickBack() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_arrow_back),
-                                contentDescription = "Back Icon"
+                                contentDescription = stringResource(R.string.back_icon)
                             )
                         }
                     },
@@ -119,7 +123,7 @@ fun RegisterScreen(
                         if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
                             viewModel.signUp(email, password)
                         } else {
-                            errorMessage = "Please fill all fields"
+                            errorMessage = context.getString(R.string.please_fill_all_fields)
                             showDialogError = true
                         }
                     }
@@ -196,7 +200,7 @@ fun RegisterScreen(
             onDismissRequest = {
                 onCLickRegister()
             },
-            textSuccess = "Login successful!"
+            textSuccess = stringResource(R.string.register_successful)
         )
     }
 
