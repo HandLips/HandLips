@@ -69,4 +69,6 @@
     <string name="eventicle">Eventicle</string>
     <string name="history">History</string>
     <string name="guest">Guest</string>
+    <string name="title_activity_hand_sign_translator">HandSignTranslator</string>
+    <string name="title_activity_communication">CommunicationActivity</string>
 </resources>

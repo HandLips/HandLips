@@ -21,7 +21,6 @@ android {
 
         buildConfigField("String", "BASE_URL", "\"https://capstone-api-442707.et.r.appspot.com/\"")
         buildConfigField("String", "VERTEX_API", "\"https://aiplatform.googleapis.com/\"")
-//        buildConfigField("String", "GEMINI_API", "AIzaSyCvtp_cv6EzlNcXTxGxSxxH52Dx05OZPhU")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -33,7 +32,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -60,7 +59,6 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.auth.ktx)
@@ -116,4 +114,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.accompanist.pager)
     implementation(libs.google.accompanist.pager.indicators)
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.extensions)
 }

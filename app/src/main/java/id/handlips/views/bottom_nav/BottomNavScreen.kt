@@ -29,7 +29,8 @@ import id.handlips.ui.theme.Blue
 fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit, onClickSubscribe: () -> Unit, onClickEvent: () -> Unit) {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { BottomBar(navController = navController) },
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             BottomNavGraph(navController = navController, onCLick = onCLickLogout, onBackLogin = onBackLogin, onClickSubscribe = onClickSubscribe, onClickEvent = onClickEvent)
@@ -39,12 +40,14 @@ fun BottomNavScreen(onCLickLogout: () -> Unit, onBackLogin: () -> Unit, onClickS
 
 @Composable
 fun BottomBar(navController: NavHostController) {
-    val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Chat,
-        BottomBarScreen.Shortcut,
-        BottomBarScreen.Profile
-    )
+    val screens =
+        listOf(
+            BottomBarScreen.Home,
+            BottomBarScreen.Chat,
+            BottomBarScreen.Shortcut,
+            BottomBarScreen.Profile,
+        )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -61,7 +64,7 @@ fun BottomBar(navController: NavHostController) {
                     Icon(
                         imageVector = screen.icon,
                         contentDescription = screen.title,
-                        modifier = Modifier.size(25.dp)
+                        modifier = Modifier.size(25.dp),
                     )
                 },
                 selected = currentRoute == screen.route,
@@ -74,17 +77,15 @@ fun BottomBar(navController: NavHostController) {
                         restoreState = true
                     }
                 },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    unselectedIconColor = Color.White.copy(alpha = 0.5f),
-                    selectedTextColor = Color.White,
-                    unselectedTextColor = Color.White.copy(alpha = 0.5f),
-                    indicatorColor = Color.White.copy(alpha = 0.1f)
-                )
+                colors =
+                    NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.White.copy(alpha = 0.5f),
+                        selectedTextColor = Color.White,
+                        unselectedTextColor = Color.White.copy(alpha = 0.5f),
+                        indicatorColor = Color.White.copy(alpha = 0.1f),
+                    ),
             )
         }
     }
 }
-
-
-
