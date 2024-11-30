@@ -1,5 +1,6 @@
 package id.handlips.data.remote
 
+import id.handlips.data.model.FeedbackResponse
 import id.handlips.data.model.HistoryResponse
 import id.handlips.data.model.ProfileResponse
 import retrofit2.http.Field
@@ -24,4 +25,10 @@ interface ApiService {
         @Path("email") email: String,
     ): ProfileResponse
 
+    @FormUrlEncoded
+    @POST("feedback")
+    suspend fun login(
+        @Field("rating") rating: Int,
+        @Field("comment") comment: String,
+    ): FeedbackResponse
 }

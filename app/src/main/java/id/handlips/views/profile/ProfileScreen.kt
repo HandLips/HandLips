@@ -114,14 +114,6 @@ fun ProfileScreen(
                     }
                 })
             }
-
-//            LongButton(
-//                onClick = {
-////                    Log.d("Logout", "Logout: ${viewModel.logout()}")
-
-//                },
-//                text = "Logout",
-//            )
         }
     }
 }
@@ -177,7 +169,6 @@ fun SectionItem(
                     }
                 }
             }
-
             if (divider) {
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp))
             }

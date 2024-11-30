@@ -95,4 +95,5 @@
     <string name="jika_belum_ada_shortcut_maka_tambahkan_terlebih_dahulu_shortcut_dengan_tekan_tombol_tambah_pada_pojok_kanan_bawah">Jika belum ada shortcut maka tambahkan terlebih dahulu shortcut dengan tekan tombol tambah pada pojok kanan bawah.</string>
     <string name="masukan_judul_pesan_suara_dan_jika_sudah_selesai_maka_tekan_tombol_tambah">Masukan judul, pesan suara dan jika sudah selesai maka tekan tombol Tambah</string>
     <string name="setelah_ditambah_maka_akan_muncul_pada_halaman_shortcut_dan_bisa_digunakan_dengan_tekan_tombol_pada_shortcut_tersebut_ketika_ingin_digunakan">Setelah ditambah maka akan muncul pada halaman shortcut dan bisa digunakan dengan tekan tombol pada shortcut tersebut ketika ingin digunakan.</string>
+    <string name="berhasil_menambah_feedback">Berhasil menambah feedback</string>
 </resources>

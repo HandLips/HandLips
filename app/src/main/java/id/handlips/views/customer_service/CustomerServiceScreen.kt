@@ -2,6 +2,7 @@ package id.handlips.views.customer_service
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,19 +37,66 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import id.handlips.R
 import id.handlips.component.button.LongButton
 import id.handlips.component.card.ExpendedCardComponent
+import id.handlips.component.dialog.DialogSuccess
+import id.handlips.component.loading.LoadingAnimation
 import id.handlips.component.textfield.DescriptionTextField
 import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
+import id.handlips.utils.UiState
+import id.handlips.views.feedback.DialogFeedbackEmot
+import id.handlips.views.feedback.DialogFeedbackTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
+fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit, viewModel: CustomerServiceViewModel = hiltViewModel()) {
     var feedback by remember { mutableStateOf("") }
     var report by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
+    var errorMessage by remember { mutableStateOf("") }
+    var showDialogSuccess by remember { mutableStateOf(false) }
+    var showDialogError by remember { mutableStateOf(false) }
+    var showDialogFeedbackEmot by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Success -> {
+                showDialogSuccess = true
+            }
+            is UiState.Error -> {
+                errorMessage = (uiState as UiState.Error).message
+                showDialogError = true
+            }
+            else -> {}
+        }
+    }
+    // Loading Overlay
+    if (uiState is UiState.Loading) {
+        LoadingOverlay()
+    }
+    if (showDialogSuccess){
+        DialogSuccess(
+            onDismissRequest = {
+                showDialogSuccess = false
+                feedback = ""
+            },
+            textSuccess = stringResource(R.string.berhasil_menambah_feedback)
+        )
+    }
+    if (showDialogFeedbackEmot) {
+        DialogFeedbackEmot(
+            onDismissRequest = {
+                showDialogFeedbackEmot = false
+            },
+            onConfirm = { emotion ->
+                viewModel.sendFeedback(emotion, feedback) // Kirim angka dan feedback ke ViewModel
+                showDialogFeedbackEmot = false
+            }
+        )
+    }
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -115,7 +166,7 @@ fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit
                             LongButton(
                                 text = stringResource(R.string.send),
                                 onClick = {
-                                    // Panggil API
+                                    showDialogFeedbackEmot = true
                                 },
                             )
                         }
@@ -171,6 +222,18 @@ fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit
                     }
                 })
         }
+    }
+}
+
+@Composable
+private fun LoadingOverlay() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White.copy(alpha = 0.7f)),
+        contentAlignment = Alignment.Center
+    ) {
+        LoadingAnimation()
     }
 }
 
