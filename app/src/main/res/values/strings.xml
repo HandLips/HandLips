@@ -71,4 +71,8 @@
     <string name="guest">Guest</string>
     <string name="guide">Guide</string>
     <string name="customer_service">Customer Service</string>
+    <string name="report">Report</string>
+    <string name="are_there_any_issues_we_can_help_you_with">Are there any issues we can help you with?</string>
+    <string name="masukan_laporan">Masukan laporan</string>
+    <string name="masukan_feedback">Masukan feedback</string>
 </resources>
