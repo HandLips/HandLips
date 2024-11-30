@@ -1,10 +1,9 @@
-package id.handlips.views.guide
+package id.handlips.views.customer_service
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.handlips.R
@@ -41,7 +39,7 @@ fun GuideScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.guide),
+                        text = stringResource(R.string.customer_service),
                         fontFamily = poppins,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -51,7 +49,7 @@ fun GuideScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
         },
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            ExpendedCardComponent(title = "Menerjemahkan Bahasa Isyarat ke Text",
+            ExpendedCardComponent(title = "Feedback",
                 compose = {
                     Column(modifier = Modifier.fillMaxWidth().background(White).padding(16.dp)){
                         Text(
@@ -59,23 +57,7 @@ fun GuideScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
                         )
                     }
                 })
-            ExpendedCardComponent(title = "Menerjemahkan Audio ke Text",
-                compose = {
-                    Column(modifier = Modifier.fillMaxWidth().background(White).padding(16.dp)){
-                        Text(
-                            text = "Content goes here",
-                        )
-                    }
-                })
-            ExpendedCardComponent(title = "Menggunakan shortcut",
-                compose = {
-                    Column(modifier = Modifier.fillMaxWidth().background(White).padding(16.dp)){
-                        Text(
-                            text = "Content goes here",
-                        )
-                    }
-                })
-            ExpendedCardComponent(title = "Ingin melakukan pembayaran",
+            ExpendedCardComponent(title = "Lapor",
                 compose = {
                     Column(modifier = Modifier.fillMaxWidth().background(White).padding(16.dp)){
                         Text(
@@ -85,11 +67,4 @@ fun GuideScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
                 })
         }
     }
-}
-
-@Preview
-@ExperimentalMaterialApi
-@Composable
-fun ExpendedCardComponentPreview() {
-   GuideScreen(onClickBack = {})
 }

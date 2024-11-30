@@ -69,4 +69,6 @@
     <string name="eventicle">Eventicle</string>
     <string name="history">History</string>
     <string name="guest">Guest</string>
+    <string name="guide">Guide</string>
+    <string name="customer_service">Customer Service</string>
 </resources>
