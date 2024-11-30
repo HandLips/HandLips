@@ -17,42 +17,39 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object MainModule {
-
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.NONE
-            }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level =
+                if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
         }
-    }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder()
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient
+            .Builder()
             .addInterceptor(loggingInterceptor)
             .build()
-    }
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
+    fun provideRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit
+            .Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-    }
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
@@ -60,11 +57,5 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        auth: FirebaseAuth
-    ): AuthRepository {
-        return AuthRepository(auth)
-    }
-
-
+    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepository(auth)
 }

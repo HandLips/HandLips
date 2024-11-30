@@ -16,22 +16,26 @@ import id.handlips.ui.theme.White
 fun LongButton(
     text: String,
     onClick: () -> Unit,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = Blue,
-        contentColor = White
-    )
+    buttonColors: ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = Blue,
+            contentColor = White,
+        ),
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth().padding(top = 20.dp).height(50.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)
+                .height(50.dp),
         colors = buttonColors,
-        shape = Shapes().small
+        shape = Shapes().small,
     ) {
         Text(
             text = text,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }
