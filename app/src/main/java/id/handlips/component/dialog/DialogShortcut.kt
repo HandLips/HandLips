@@ -3,6 +3,7 @@ package id.handlips.component.dialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,8 +51,7 @@ fun DialogShortcut(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(16.dp),
+                .wrapContentHeight(),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Column(
@@ -70,12 +70,13 @@ fun DialogShortcut(
                 Text(
                     text = stringResource(R.string.add_shortcut),
                     fontFamily = poppins,
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 8.dp),
                 )
+                Spacer(Modifier.padding(10.dp))
                 GeneralTextField(
                     title = stringResource(R.string.title),
                     onValueChange = onTitleChange,
@@ -87,7 +88,7 @@ fun DialogShortcut(
                         modifier = Modifier.padding(top = 10.dp),
                         text = stringResource(R.string.text_suara),
                         fontFamily = poppins,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                     )

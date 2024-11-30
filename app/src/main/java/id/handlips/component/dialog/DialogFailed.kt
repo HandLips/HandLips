@@ -31,8 +31,7 @@ fun DialogError(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
-                .wrapContentHeight()
-                .padding(16.dp),
+                .wrapContentHeight(),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(

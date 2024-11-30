@@ -238,6 +238,7 @@ fun HomeScreen(
                             }
                         }
                     }
+                    Spacer(Modifier.padding(15.dp))
                     MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }

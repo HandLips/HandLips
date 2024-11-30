@@ -38,7 +38,7 @@ fun BottomNavGraph(
             ChatScreen()
         }
         composable(route = BottomBarScreen.Shortcut.route){
-            ShortcutScreen()
+            ShortcutScreen(navHostController = navController)
         }
         composable(route = BottomBarScreen.Profile.route){
             ProfileScreen(onClickLogout = onCLick)

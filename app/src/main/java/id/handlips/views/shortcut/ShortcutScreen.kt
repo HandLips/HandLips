@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,17 +42,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import id.handlips.R
 import id.handlips.component.dialog.DialogError
 import id.handlips.component.dialog.DialogShortcut
+import id.handlips.component.dialog.DialogSuccess
 import id.handlips.component.loading.LoadingAnimation
 import id.handlips.data.model.DataItem
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.White
 import id.handlips.utils.Resource
+import id.handlips.utils.UiState
 
 @Composable
-fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel = hiltViewModel()) {
+fun ShortcutScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ShortcutViewModel = hiltViewModel(),
+    navHostController: NavHostController
+) {
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
@@ -62,9 +70,13 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
     var notFound by remember { mutableStateOf(false) }
     val getEmail = viewModel.getEmail()
     var refreshTrigger by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
+    var showDialogSuccess by remember { mutableStateOf(false) }
+
 
     Log.i("EmailSekarang", getEmail)
-    LaunchedEffect(refreshTrigger) {
+    LaunchedEffect(refreshTrigger, uiState) {
+        Log.d("Refresh", "LaunchedEffect: $refreshTrigger")
         viewModel.getSound(getEmail).observeForever { resource ->
             when (resource) {
                 is Resource.Loading -> {
@@ -83,11 +95,37 @@ fun ShortcutScreen(modifier: Modifier = Modifier, viewModel: ShortcutViewModel =
                 }
             }
         }
+        when (uiState) {
+            is UiState.Success -> {
+                showDialogSuccess = true // Tampilkan dialog sukses
+            }
+
+            is UiState.Error -> {
+                textError = (uiState as UiState.Error).message
+                dialogError = true
+            }
+
+            else -> {
+                // Tangani kondisi lain jika diperlukan
+            }
+        }
     }
     if (dialogError) {
         DialogError(
-            onDismissRequest = { dialogError = false },
+            onDismissRequest = {
+                dialogError = false
+            },
             textError = textError
+        )
+    }
+    if (showDialogSuccess) {
+        DialogSuccess(
+            onDismissRequest = {
+                showDialogSuccess = false
+                Log.d("TestDialogError", "DialogError: $dialogError")
+
+            },
+            textSuccess = stringResource(R.string.berhasil_menambah_shortcut)
         )
     }
     if (dialogAddSound) {
