@@ -47,7 +47,8 @@ import id.handlips.R
 import id.handlips.component.card.CardComponent
 import id.handlips.component.dialog.DialogError
 import id.handlips.component.loading.LoadingAnimation
-import id.handlips.data.model.Data
+import id.handlips.data.model.DataHistory
+import id.handlips.data.model.DataProfile
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
@@ -61,42 +62,72 @@ fun HomeScreen(
     onClickSubscripe: () -> Unit,
     onClickEvent: () -> Unit
 ) {
-    val uid = viewModel.getCurrentUser()?.uid
-    var historyItems by remember { mutableStateOf<List<Data>>(emptyList()) }
+    val getEmail = viewModel.getCurrentEmail()
+    Log.d("HomeScreen", "Current Email: $getEmail")
+    var profile by remember { mutableStateOf<DataProfile?>(null) }
+    var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
-        viewModel.getHistory().observeForever { resource ->
+//        viewModel.getHistory().observeForever { resource ->
+//            when (resource) {
+//                is Resource.Loading -> {
+//                    Log.d("HomeScreen", "Fetching history: Loading...")
+//                    loading = true
+//                }
+//
+//                is Resource.Success -> {
+//                    loading = false
+//                    historyItems = resource.data.data
+//                    Log.d("HomeScreen", "History fetched successfully: ${historyItems.size} items")
+//                }
+//
+//                is Resource.Error -> {
+//                    loading = false
+//                    dialogError = true
+//                    textError = resource.message
+//                    Log.e("HomeScreen", "Error fetching history: ${resource.message}")
+//                }
+//            }
+//        }
+
+        viewModel.getProfile(getEmail).observeForever { resource ->
             when (resource) {
                 is Resource.Loading -> {
+                    Log.d("HomeScreen", "Fetching profile: Loading...")
                     loading = true
                 }
 
                 is Resource.Success -> {
                     loading = false
-                    historyItems = listOf(resource.data.data)
+                    profile = resource.data.data
+                    Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
                 }
 
                 is Resource.Error -> {
                     loading = false
                     dialogError = true
                     textError = resource.message
+                    Log.e("HomeScreen", "Error fetching profile: ${resource.message}")
                 }
             }
         }
-    }
-    if (!viewModel.isLoggin()) {
-        LaunchedEffect(Unit) {
+
+        if (!viewModel.isLoggin()) {
+            Log.d("HomeScreen", "User not logged in. Redirecting to login.")
             backLogin()
         }
     }
-    if (dialogError){
+
+    if (dialogError) {
         DialogError(
             onDismissRequest = { dialogError = false },
             textError = textError
         )
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -121,8 +152,9 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.hai_user,
-                            viewModel.getCurrentUser()?.email!!
+                        text = stringResource(
+                            R.string.hai_user,
+                            profile?.name ?: stringResource(R.string.guest)
                         ),
                         fontSize = 12.sp,
                         fontFamily = poppins,
@@ -140,13 +172,13 @@ fun HomeScreen(
                 }
             }
 
+            // Card Section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .offset(y = (-70).dp)
             ) {
-
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -162,7 +194,6 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        // Logo
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,
@@ -206,15 +237,13 @@ fun HomeScreen(
                                 )
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(24.dp))
                     }
                     MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }
             }
 
-            // Main Card Content
+            // Main Content
             Column(
                 modifier = Modifier
                     .padding(horizontal = 26.dp)
@@ -234,18 +263,18 @@ fun HomeScreen(
                         historyItems.forEach { historyItem ->
                             CardComponent(
                                 title = historyItem.title.trim(),
-                                sumChat = historyItem.message.length.toString(), // Using message as chat count if needed
+                                sumChat = historyItem.message?.size.toString(),
                                 date = formatDate(historyItem.createdAt),
-                                onClick = { /* Handle click on history item */ }
+                                onClick = { Log.d("HomeScreen", "Clicked on history item: ${historyItem.title}") }
                             )
                         }
-                    }
-                    if(historyItems.isEmpty()) {
+                    } else {
+                        Log.d("HomeScreen", "No history data available.")
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(25.dp)
-                        ){
+                        ) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = stringResource(R.string.tidak_ada_history),
@@ -256,13 +285,12 @@ fun HomeScreen(
                             )
                         }
                     }
-
                 }
             }
         }
     }
+
     if (loading) {
-        // Dark transparent background
         Box(
             modifier = Modifier
                 .fillMaxSize()

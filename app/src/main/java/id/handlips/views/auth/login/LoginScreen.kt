@@ -1,6 +1,7 @@
 package id.handlips.views.auth.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import id.handlips.component.button.LongButton
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +48,6 @@ import id.handlips.utils.UiState
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
     onClickLogin: () -> Unit,
     onClickGoogle: () -> Unit,
     onClickRegister: () -> Unit,
@@ -150,7 +150,9 @@ fun LoginScreen(
         // Google Sign In
         GoogleButton(
             text = stringResource(R.string.btn_google_login),
-            onClick = { /* Implement Google Sign In */ }
+            onClick = {
+                onClickGoogle()
+            }
         )
 
         // Register Link

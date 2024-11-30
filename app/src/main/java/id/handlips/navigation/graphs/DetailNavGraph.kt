@@ -4,9 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import id.handlips.views.gemini.GeminiScreen
 import id.handlips.views.history.HistoryScreen
-import id.handlips.views.subscribe.SubscribeScreen
+import id.handlips.views.menu_home.gemini.GeminiScreen
+import id.handlips.views.menu_home.subscribe.SubscribeScreen
 
 fun NavGraphBuilder.detailsHomeNavGraph(navController: NavHostController, onClickBack: () -> Unit) {
     navigation(route = Route.DETAILS_HOME, startDestination = DetailsScreen.Subscribe.route){
@@ -28,5 +28,4 @@ sealed class DetailsScreen(val route: String) {
     object Subscribe : DetailsScreen(route = "SUBSCRIPE")
     object History : DetailsScreen(route = "HISTORY")
     object Event : DetailsScreen(route = "EVENT")
-
 }
