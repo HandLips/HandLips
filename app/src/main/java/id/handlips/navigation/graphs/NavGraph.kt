@@ -26,19 +26,31 @@ fun NavGraph(navController: NavHostController) {
         composable(route = Route.HOME) {
             BottomNavScreen(
                 onCLickLogout = {
-                navController.popBackStack()
-                navController.navigate(Route.AUTHENTICATION)
-            },
+                    navController.popBackStack()
+                    navController.navigate(Route.AUTHENTICATION)
+                },
                 onBackLogin = {
-                navController.popBackStack()
-                navController.navigate(Route.AUTHENTICATION)
-            },
+                    navController.popBackStack()
+                    navController.navigate(Route.AUTHENTICATION)
+                },
                 onClickSubscribe = {
-                navController.navigate(DetailsScreen.Subscribe.route)
-            },
+                    navController.navigate(DetailsScreen.Subscribe.route)
+                },
                 onClickEvent = {
-                navController.navigate(DetailsScreen.Event.route)
-            })
+                    navController.navigate(DetailsScreen.Event.route)
+                },
+                onClickLangganan = {
+                    navController.navigate(DetailsScreen.Subscribe.route)
+                },
+                onClickCustomerService = {
+                    navController.navigate(DetailsScreen.CustomerService.route)
+                },
+                onClickGuide = {
+                    navController.navigate(DetailsScreen.Guide.route)
+                },
+                onClickGantiPassword = {
+                    navController.navigate(Screen.ChangePassword.route)
+                })
         }
 //        composable(route = Route.ONBOARDING) {
 //            OnBoardingScreen(
@@ -50,9 +62,8 @@ fun NavGraph(navController: NavHostController) {
 //            )
 //        }
         authNavGraph(navController = navController)
-        detailsHomeNavGraph(navController ,onClickBack = {
+        detailsHomeNavGraph(navController, onClickBack = {
             navController.popBackStack()
-            navController.navigate(Route.HOME)
         })
     }
 }

@@ -31,7 +31,7 @@ import id.handlips.ui.theme.poppins
 @Composable
 fun DialogFeedbackTextField(
     onDismissRequest: () -> Unit,
-    onConfirm: (String) -> Unit,
+    onConfirm: (String, Boolean) -> Unit,
 ) {
     var feedback by remember { mutableStateOf("") }
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -74,7 +74,7 @@ fun DialogFeedbackTextField(
                 DoubleButton(
                     onClickCancel = { onDismissRequest() },
                     onClickConfirm = {
-                        onConfirm(feedback)
+                        onConfirm(feedback, true)
                     },
                 )
             }

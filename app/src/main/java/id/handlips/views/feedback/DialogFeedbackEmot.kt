@@ -20,7 +20,7 @@ import id.handlips.ui.theme.poppins
 @Composable
 fun DialogFeedbackEmot(
     onDismissRequest: () -> Unit,
-    onConfirm: (String) -> Unit,
+    onConfirm: (Int) -> Unit, // Ubah parameter menjadi Int
 ) {
     var selectedEmotion by remember { mutableStateOf<String?>(null) }
 
@@ -61,11 +61,11 @@ fun DialogFeedbackEmot(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     listOf(
-                        "😁" to "1",
-                        "🙂" to "2",
-                        "😐" to "3",
-                        "☹️" to "4"
-                    ).forEach { (emotion) ->
+                        "😁" to 1,
+                        "🙂" to 2,
+                        "😐" to 3,
+                        "☹️" to 4
+                    ).forEach { (emotion, _) ->
                         EmotionItem(
                             emotion = emotion,
                             isSelected = selectedEmotion == emotion,
@@ -78,7 +78,14 @@ fun DialogFeedbackEmot(
                     onClickCancel = { onDismissRequest() },
                     onClickConfirm = {
                         if (selectedEmotion != null) {
-                            onConfirm(selectedEmotion!!)
+                            val selectedValue = when (selectedEmotion) {
+                                "😁" -> 1
+                                "🙂" -> 2
+                                "😐" -> 3
+                                "☹️" -> 4
+                                else -> 0
+                            }
+                            onConfirm(selectedValue)
                         }
                     },
                 )
@@ -86,6 +93,7 @@ fun DialogFeedbackEmot(
         }
     }
 }
+
 
 @Composable
 fun EmotionItem(
