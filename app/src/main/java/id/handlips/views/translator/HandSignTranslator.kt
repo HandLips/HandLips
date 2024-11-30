@@ -31,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,6 +63,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.HandlipsTheme
+import id.handlips.ui.theme.Red
 import id.handlips.ui.theme.White
 
 class HandSignTranslator : ComponentActivity() {
@@ -82,7 +84,10 @@ class HandSignTranslator : ComponentActivity() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun ResultBoard(result: String) {
+fun ResultBoard(
+    result: String,
+    isSpeechToText: Boolean = false,
+) {
     Card(
         shape =
             RoundedCornerShape(
@@ -111,15 +116,36 @@ fun ResultBoard(result: String) {
                 modifier =
                     Modifier
                         .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(result, fontSize = 20.sp)
+                if (isSpeechToText) {
+                    CircleButton(
+                        icon = Icons.Filled.Star,
+                        containerColor = Red,
+                        contentColor = White,
+                        onClick = {},
+                        contentDescription = "",
+                        size = 120,
+                    )
+                } else {
+                    Text(result, fontSize = 20.sp)
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    CircleButton(Icons.Filled.Refresh, { null }, "Riwayat Percakapan")
-                    CircleButton(Icons.Filled.Call, { null }, "Terjemah Suara ke Teks")
+                    CircleButton(
+                        icon = Icons.Filled.Refresh,
+                        onClick = { null },
+                        contentDescription = "Riwayat Percakapan",
+                    )
+                    CircleButton(
+                        icon = Icons.Filled.Call,
+                        onClick = { null },
+                        contentDescription = "Terjemah Suara ke Teks",
+                    )
                 }
             }
         }
@@ -130,16 +156,20 @@ fun ResultBoard(result: String) {
 @Composable
 fun CircleButton(
     icon: ImageVector,
+    containerColor: Color = Blue,
+    contentColor: Color = White,
     onClick: () -> Unit,
     contentDescription: String,
     size: Int = 94,
 ) {
     val iconSize = size - (size / 1.5)
     LargeFloatingActionButton(
-        onClick = { onClick },
+        onClick = {
+            onClick
+        },
         shape = CircleShape,
-        containerColor = Blue,
-        contentColor = White,
+        containerColor = containerColor,
+        contentColor = contentColor,
         modifier =
             Modifier
                 .shadow(
@@ -222,8 +252,9 @@ fun CameraPreview(modifier: Modifier = Modifier.fillMaxSize()) {
 @Suppress("ktlint:standard:function-naming")
 @Preview(showBackground = true)
 @Composable
-fun HandSignTranslatorPreview() {
+private fun HandSignTranslatorPreview() {
     HandlipsTheme {
+        val isSpeechToText: Boolean = false
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -248,8 +279,13 @@ fun HandSignTranslatorPreview() {
                         .fillMaxSize()
                         .padding(innerPadding),
             ) {
-                CameraPreview()
-                ResultBoard("Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?")
+                if (isSpeechToText) {
+                    Text("Speech to Text Result")
+                } else {
+                    Text("Camera Preview")
+//                CameraPreview()
+                }
+                ResultBoard(isSpeechToText = isSpeechToText, result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?")
             }
         }
     }
