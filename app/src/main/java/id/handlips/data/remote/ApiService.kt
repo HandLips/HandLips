@@ -4,6 +4,7 @@ import id.handlips.data.model.FeedbackResponse
 import id.handlips.data.model.HistoryResponse
 import id.handlips.data.model.ListSoundResponse
 import id.handlips.data.model.ProfileResponse
+import id.handlips.data.model.ReportResponse
 import id.handlips.data.model.SoundResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -42,8 +43,14 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("feedback")
-    suspend fun login(
+    suspend fun createFeedback(
         @Field("rating") rating: Int,
         @Field("comment") comment: String,
     ): FeedbackResponse
+
+    @FormUrlEncoded
+    @POST("report")
+    suspend fun createReport(
+        @Field("comment") reason: String,
+    ): ReportResponse
 }

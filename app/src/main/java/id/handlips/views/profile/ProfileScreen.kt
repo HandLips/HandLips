@@ -79,7 +79,7 @@ fun ProfileScreen(
             Row(
                 modifier =
                 Modifier
-                    .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
+                    .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -95,7 +95,7 @@ fun ProfileScreen(
             Spacer(Modifier.height(12.dp))
             Text("Ivan Try Wicaksono", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            Text("ivan@gmail.com")
+            Text(viewModel.getCurrentEmail())
             Spacer(Modifier.height(12.dp))
             Button(
                 shape = RoundedCornerShape(8.dp),
@@ -113,7 +113,7 @@ fun ProfileScreen(
             }
 
             Section("Pengaturan") {
-                SectionItem("Ganti Password", "Keamanan data", onClickItem = onCickGantiPassword, color = Color.Black.copy(alpha = 0.9f), icon = R.drawable.ic_change_password)
+                SectionItem("Ganti Password", "Jaga keamanan data", onClickItem = onCickGantiPassword, color = Color.Black.copy(alpha = 0.9f), icon = R.drawable.ic_change_password)
                 SectionItem("Log Out", "Yakin Mau Log Out", false, onClickItem = {
                     if (viewModel.logout()) {
                         onClickLogout()

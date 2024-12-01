@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.handlips.data.model.FeedbackResponse
 import id.handlips.data.model.ProfileResponse
+import id.handlips.data.model.ReportResponse
 import id.handlips.data.repository.FeedbackRepository
 import id.handlips.utils.Resource
 import id.handlips.utils.UiState
@@ -19,11 +20,27 @@ class CustomerServiceViewModel @Inject constructor(private val csRepository: Fee
     private val _uiState = MutableStateFlow<UiState<FeedbackResponse>>(UiState.Initial)
     val uiState = _uiState.asStateFlow()
 
+    private val _uiStateReport = MutableStateFlow<UiState<ReportResponse>>(UiState.Initial)
+    val uiStateReport = _uiStateReport.asStateFlow()
+
     fun sendFeedback(rating: Int, comment: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             val result = csRepository.sendFeedback(rating, comment)
             _uiState.value = when (result) {
+                is Resource.Loading -> UiState.Loading
+                is Resource.Success -> UiState.Success(result.data)
+                is Resource.Error -> UiState.Error(result.message)
+            }
+        }
+    }
+
+    fun sendReport(reason: String) {
+        viewModelScope.launch {
+            _uiStateReport.value = UiState.Loading
+            val result = csRepository.sendReport(reason)
+
+            _uiStateReport.value = when(result){
                 is Resource.Loading -> UiState.Loading
                 is Resource.Success -> UiState.Success(result.data)
                 is Resource.Error -> UiState.Error(result.message)

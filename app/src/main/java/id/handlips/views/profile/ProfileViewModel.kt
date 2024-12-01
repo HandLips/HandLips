@@ -18,4 +18,7 @@ class ProfileViewModel
             } catch (e: Exception) {
                 false
             }
+    fun getCurrentEmail() : String {
+        return authRepository.getCurrentUser()?.email.toString()
+    }
     }

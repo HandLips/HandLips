@@ -104,7 +104,6 @@ fun BottomBar(navController: NavHostController) {
                     indicatorColor = Color.White, // Background putih saat dipilih
                 ),
             )
-
         }
     }
 }
