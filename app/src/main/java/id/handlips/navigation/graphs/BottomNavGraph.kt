@@ -1,18 +1,9 @@
 package id.handlips.navigation.graphs
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import id.handlips.navigation.BottomBarScreen
 import id.handlips.views.chat.ChatScreen
 import id.handlips.views.home.HomeScreen
 import id.handlips.views.profile.ProfileScreen

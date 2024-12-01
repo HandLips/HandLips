@@ -32,10 +32,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import id.handlips.ui.theme.Blue
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.handlips.component.button.LongButton
 import id.handlips.R
+import id.handlips.ui.theme.poppins
 
 @Composable
 fun ProfileScreen(
@@ -71,12 +75,12 @@ fun ProfileScreen(
                 contentDescription = "Profile Photo",
                 modifier = Modifier.clip(shape = CircleShape),
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(20.dp))
             Row(
                 modifier =
                 Modifier
-                    .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
-                    .padding(12.dp),
+                    .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Canvas(modifier = Modifier.size(12.dp)) {
@@ -84,12 +88,14 @@ fun ProfileScreen(
                     drawCircle(color = Color.Blue, style = Stroke(width = 3f))
                 }
                 Spacer(Modifier.width(8.dp))
-                Text("Reguler")
+                Text("Reguler", style = TextStyle(
+                    fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 12.sp
+                ))
             }
             Spacer(Modifier.height(12.dp))
             Text("Ivan Try Wicaksono", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            Text("ivan@gmail.com")
+            Text(viewModel.getCurrentEmail())
             Spacer(Modifier.height(12.dp))
             Button(
                 shape = RoundedCornerShape(8.dp),
@@ -101,19 +107,20 @@ fun ProfileScreen(
             ) { Text("Edit Profile") }
 
             Section("Inventaris") {
-                SectionItem("Langganan", "Description", onClickItem = onClickLangganan)
-                SectionItem("Customer Service", "Description", onClickItem = onClickCustomerService)
-                SectionItem("Guide", "Description", false, onClickItem = onClickGuide)
+                SectionItem("Langganan", "Ayo mulai berlangganan", onClickItem = onClickLangganan, color = Color.Green, icon = R.drawable.ic_payment)
+                SectionItem("Customer Service", "Kami siap membantu",  onClickItem = onClickCustomerService, color = Blue, icon = R.drawable.ic_customer_service)
+                SectionItem("Guide", "Semua menjadi mudah", false, onClickItem = onClickGuide, color = Color.Cyan, icon = R.drawable.ic_bolt)
             }
 
             Section("Pengaturan") {
-                SectionItem("Ganti Password", "Description", onClickItem = onCickGantiPassword)
-                SectionItem("Log Out", "", false, onClickItem = {
+                SectionItem("Ganti Password", "Jaga keamanan data", onClickItem = onCickGantiPassword, color = Color.Black.copy(alpha = 0.9f), icon = R.drawable.ic_change_password)
+                SectionItem("Log Out", "Yakin Mau Log Out", false, onClickItem = {
                     if (viewModel.logout()) {
                         onClickLogout()
                     }
-                })
+                }, color = Color.Red, icon = R.drawable.ic_logout)
             }
+            Spacer(Modifier.padding(bottom = 30.dp))
         }
     }
 }
@@ -135,8 +142,10 @@ fun Section(
             modifier =
             Modifier
                 .fillMaxWidth()
-                .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
-                .padding(vertical = 8.dp),
+                .shadow(
+                    elevation = 5.dp, // Tinggi bayangan
+                    shape = RoundedCornerShape(15.dp), // Bentuk bayangan
+                ),
         ) {
             content()
         }
@@ -148,7 +157,9 @@ fun SectionItem(
     title: String,
     description: String,
     divider: Boolean = true,
-    onClickItem: () -> Unit
+    onClickItem: () -> Unit,
+    color: Color,
+    icon: Int,
 ) {
     Surface(onClick = onClickItem) {
         Column {
@@ -159,7 +170,12 @@ fun SectionItem(
                     .padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Default.Person, contentDescription = "Person")
+                Image(
+                    painter = painterResource(id = icon),
+                    colorFilter = ColorFilter.tint(color),
+                    contentDescription = "Person Icon",
+                    modifier = Modifier.size(24.dp)
+                )
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(title)

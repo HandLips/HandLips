@@ -1,5 +1,6 @@
 package id.handlips.views.customer_service
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,26 +57,47 @@ import id.handlips.views.feedback.DialogFeedbackTextField
 fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit, viewModel: CustomerServiceViewModel = hiltViewModel()) {
     var feedback by remember { mutableStateOf("") }
     var report by remember { mutableStateOf("") }
+    var succesFor by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     var errorMessage by remember { mutableStateOf("") }
     var showDialogSuccess by remember { mutableStateOf(false) }
     var showDialogError by remember { mutableStateOf(false) }
     var showDialogFeedbackEmot by remember { mutableStateOf(false) }
-    val uiState by viewModel.uiState.collectAsState()
-    LaunchedEffect(uiState) {
-        when (uiState) {
+    val uiStateFeedback by viewModel.uiState.collectAsState()
+    val uiStateReport by viewModel.uiStateReport.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(uiStateFeedback, uiStateReport) {
+        when (uiStateFeedback) {
             is UiState.Success -> {
                 showDialogSuccess = true
+                succesFor = context.getString(R.string.feedback)
             }
             is UiState.Error -> {
-                errorMessage = (uiState as UiState.Error).message
+                errorMessage = (uiStateFeedback as UiState.Error).message
                 showDialogError = true
             }
             else -> {}
         }
+
+        when (uiStateReport) {
+            is UiState.Success -> {
+                showDialogSuccess = true
+                succesFor = context.getString(R.string.report)
+            }
+            is UiState.Error -> {
+                errorMessage = (uiStateFeedback as UiState.Error).message
+                showDialogError = true
+            }
+            else -> {}
+        }
+
     }
     // Loading Overlay
-    if (uiState is UiState.Loading) {
+    if (uiStateFeedback is UiState.Loading) {
+        LoadingOverlay()
+    }
+    if (uiStateReport is UiState.Loading) {
         LoadingOverlay()
     }
     if (showDialogSuccess){
@@ -82,8 +105,9 @@ fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit
             onDismissRequest = {
                 showDialogSuccess = false
                 feedback = ""
+                report = ""
             },
-            textSuccess = stringResource(R.string.berhasil_menambah_feedback)
+            textSuccess = stringResource(R.string.succes_create, succesFor)
         )
     }
     if (showDialogFeedbackEmot) {
@@ -123,7 +147,7 @@ fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit
         Column(modifier = Modifier
             .padding(paddingValues)
             .verticalScroll(scrollState)) {
-            ExpendedCardComponent(title = "Feedback",
+            ExpendedCardComponent(title = stringResource(R.string.feedback),
                 compose = {
                     Card(
                         modifier = Modifier
@@ -215,7 +239,7 @@ fun CustomerServiceScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit
                             LongButton(
                                 text = stringResource(R.string.send),
                                 onClick = {
-                                    // Panggil API
+                                    viewModel.sendReport(reason = report)
                                 },
                             )
                         }

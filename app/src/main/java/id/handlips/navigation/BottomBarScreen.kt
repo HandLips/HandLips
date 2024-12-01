@@ -1,39 +1,31 @@
-package id.handlips.navigation
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import id.handlips.R
 
 sealed class BottomBarScreen(
     val route: String,
     val title: String,
-    val icon: ImageVector,
+    val icon: @Composable () -> Painter,
 ) {
     object Home : BottomBarScreen(
         route = "HOME",
         title = "HOME",
-        icon = Icons.Default.Home
+        icon = { painterResource(R.drawable.ic_home) } // Sesuaikan dengan nama file drawable Anda
     )
     object Chat : BottomBarScreen(
         route = "CHAT",
         title = "CHAT",
-        icon = Icons.Default.Search
+        icon = { painterResource(R.drawable.ic_message) }
     )
     object Shortcut : BottomBarScreen(
         route = "SHORTCUT",
         title = "SHORTCUT",
-        icon = Icons.Default.Settings
+        icon = { painterResource(R.drawable.ic_bolt) }
     )
     object Profile : BottomBarScreen(
         route = "PROFILE",
         title = "PROFILE",
-        icon = Icons.Default.Person
+        icon = { painterResource(R.drawable.ic_person) }
     )
 }

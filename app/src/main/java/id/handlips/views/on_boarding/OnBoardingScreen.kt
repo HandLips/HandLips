@@ -2,6 +2,7 @@ package id.handlips.views.on_boarding
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -33,17 +35,29 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.White
+import id.handlips.utils.OnboardingPage
+import id.handlips.utils.welcomePages
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnBoardingScreen(
+    modifier: Modifier = Modifier,
     onBoardingViewModel: OnBoardingViewModel = hiltViewModel(),
     pages: List<OnboardingPage>,
     onClickLogin: () -> Unit
 ) {
     val pagerState = rememberPagerState()
+    val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    // Get current page's background color
+    val currentColor = pages[pagerState.currentPage].color
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(currentColor)  // Use current page's color
+    ) {
         HorizontalPager(
             modifier = Modifier.weight(10f),
             count = pages.size,
@@ -53,25 +67,24 @@ fun OnBoardingScreen(
             PagerScreen(onBoardingPage = pages[position])
         }
 
-        AnimatedVisibility(
+        HorizontalPagerIndicator(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .weight(1f),
-            visible = pagerState.currentPage != pages.size - 1
-        ) {
-            HorizontalPagerIndicator(
-                modifier = Modifier.weight(1f),
-                pagerState = pagerState
-            )
-        }
+            pagerState = pagerState,
+            activeColor = Blue,
+            inactiveColor = Color.LightGray
+        )
 
         FinishButton(
             modifier = Modifier.weight(1f),
             pagerState = pagerState,
-            pages = pages
+            pages = pages,
         ) {
-            onBoardingViewModel.saveOnBoardingState(completed = true)
-            onClickLogin()
+            scope.launch {
+                onBoardingViewModel.saveOnBoardingState(completed = true)
+                onClickLogin()
+            }
         }
     }
 }
@@ -81,7 +94,7 @@ private fun PagerScreen(onBoardingPage: OnboardingPage) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp),  // Removed background here as it's handled by parent
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -102,11 +115,8 @@ private fun PagerScreen(onBoardingPage: OnboardingPage) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = onBoardingPage.title,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
+            style = onBoardingPage.titleStyle,
             textAlign = TextAlign.Center,
-            color = Color.Black
         )
 
         Text(
@@ -114,9 +124,8 @@ private fun PagerScreen(onBoardingPage: OnboardingPage) {
                 .fillMaxWidth()
                 .padding(top = 16.dp),
             text = onBoardingPage.description,
-            style = MaterialTheme.typography.bodySmall,
+            style = onBoardingPage.descriptionStyle,
             textAlign = TextAlign.Center,
-            color = Color.Gray
         )
     }
 }
@@ -130,7 +139,8 @@ private fun FinishButton(
     onClick: () -> Unit
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp),  // Background handled by parent
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -149,4 +159,14 @@ private fun FinishButton(
             }
         }
     }
+}
+
+@Preview
+@ExperimentalMaterialApi
+@Composable
+fun OnBoardingPreview(modifier: Modifier = Modifier) {
+    OnBoardingScreen(
+        pages = welcomePages,
+        onClickLogin = {}
+    )
 }

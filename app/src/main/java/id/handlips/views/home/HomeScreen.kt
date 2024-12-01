@@ -238,6 +238,7 @@ fun HomeScreen(
                             }
                         }
                     }
+                    Spacer(Modifier.padding(bottom = 15.dp))
                     MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }
@@ -314,14 +315,14 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
     ) {
         CardMenu(
             modifier = Modifier.size(100.dp),
-            id = R.drawable.ic_visibility,
+            id = R.drawable.ic_calender,
             title = stringResource(R.string.eventicle),
             onClick = onClickEvent
         )
 
         CardMenu(
             modifier = Modifier.size(100.dp),
-            id = R.drawable.ic_visibility_off,
+            id = R.drawable.ic_history,
             title = stringResource(R.string.history)
         ) {
             // Handle click event
@@ -329,7 +330,7 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
 
         CardMenu(
             modifier = Modifier.size(100.dp),
-            id = R.drawable.ic_arrow_back,
+            id = R.drawable.ic_payment,
             title = stringResource(R.string.langganan),
             onClick = {
                 onClickSubscripe()

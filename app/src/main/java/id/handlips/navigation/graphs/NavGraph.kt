@@ -1,26 +1,26 @@
 package id.handlips.navigation.graphs
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import id.handlips.R
-import id.handlips.navigation.BottomBarScreen
+import id.handlips.utils.welcomePages
 import id.handlips.views.bottom_nav.BottomNavScreen
-import id.handlips.views.menu_home.gemini.GeminiScreen
-import id.handlips.views.history.HistoryScreen
 import id.handlips.views.on_boarding.OnBoardingScreen
-import id.handlips.views.on_boarding.OnboardingPage
-import id.handlips.views.menu_home.subscribe.SubscribeScreen
+import id.handlips.views.on_boarding.OnBoardingViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController) {
-//    val startDestination = if (isOnboardingCompleted) Route.HOME else Route.ONBOARDING
+fun NavGraph(navController: NavHostController, onBoardingViewModel: OnBoardingViewModel = hiltViewModel()) {
+    val isOnboardingCompleted by onBoardingViewModel.isOnboardingCompleted.collectAsState()
     NavHost(
         navController = navController,
-        startDestination = Route.HOME,
+        startDestination = if(isOnboardingCompleted) Route.ONBOARDING else Route.HOME,
         route = Route.ROOT
     ) {
         composable(route = Route.HOME) {
@@ -52,15 +52,15 @@ fun NavGraph(navController: NavHostController) {
                     navController.navigate(Screen.ChangePassword.route)
                 })
         }
-//        composable(route = Route.ONBOARDING) {
-//            OnBoardingScreen(
-//                pages = welcomePages,
-//                onClickLogin = {
-//                    navController.popBackStack()
-//                    navController.navigate(Route.AUTHENTICATION)
-//                }
-//            )
-//        }
+        composable(route = Route.ONBOARDING) {
+            OnBoardingScreen(
+                pages = welcomePages,
+                onClickLogin = {
+                    navController.popBackStack()
+                    navController.navigate(Route.AUTHENTICATION)
+                }
+            )
+        }
         authNavGraph(navController = navController)
         detailsHomeNavGraph(navController, onClickBack = {
             navController.popBackStack()
@@ -74,5 +74,5 @@ object Route {
     const val AUTHENTICATION = "auth_graph"
     const val HOME = "home_graph"
     const val DETAILS_HOME = "details_home_graph"
-//    const val ONBOARDING = "onboarding_graph"
+    const val ONBOARDING = "onboarding_graph"
 }
