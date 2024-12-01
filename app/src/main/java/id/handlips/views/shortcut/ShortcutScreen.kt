@@ -4,6 +4,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.CountDownTimer
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -155,12 +158,18 @@ fun ShortcutScreen(
                 onClick = {
                     dialogAddSound = true
                 },
-                containerColor = Blue,
+                containerColor = White,
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = Blue,
+                        shape = FloatingActionButtonDefaults.shape // Pastikan mengikuti bentuk FAB
+                    )
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add",
-                    tint = Color.White
+                    tint = Blue
                 )
             }
         },

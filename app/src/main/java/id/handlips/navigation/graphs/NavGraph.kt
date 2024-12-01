@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import id.handlips.R
-import id.handlips.navigation.BottomBarScreen
 import id.handlips.views.bottom_nav.BottomNavScreen
 import id.handlips.views.menu_home.gemini.GeminiScreen
 import id.handlips.views.history.HistoryScreen

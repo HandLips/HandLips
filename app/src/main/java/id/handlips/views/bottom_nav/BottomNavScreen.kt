@@ -21,7 +21,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import id.handlips.navigation.BottomBarScreen
 import id.handlips.navigation.graphs.BottomNavGraph
 import id.handlips.ui.theme.Blue
 
@@ -38,7 +37,7 @@ fun BottomNavScreen(
 ) {
     val navController = rememberNavController()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(bottom = 10.dp),
         bottomBar = { BottomBar(navController = navController) },
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
@@ -73,7 +72,7 @@ fun BottomBar(navController: NavHostController) {
     NavigationBar(
         containerColor = Blue,
         modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .padding(horizontal = 10.dp)
             .height(65.dp)
             .clip(RoundedCornerShape(16.dp)),
         tonalElevation = 8.dp
@@ -82,7 +81,7 @@ fun BottomBar(navController: NavHostController) {
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = screen.icon,
+                        painter = screen.icon(),
                         contentDescription = screen.title,
                         modifier = Modifier.size(25.dp),
                     )
@@ -97,15 +96,15 @@ fun BottomBar(navController: NavHostController) {
                         restoreState = true
                     }
                 },
-                colors =
-                    NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.White.copy(alpha = 0.5f),
-                        selectedTextColor = Color.White,
-                        unselectedTextColor = Color.White.copy(alpha = 0.5f),
-                        indicatorColor = Color.White.copy(alpha = 0.1f),
-                    ),
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Blue,
+                    unselectedIconColor = Color.White.copy(alpha = 0.5f),
+                    selectedTextColor = Blue, // Jika teks ada, berwarna biru
+                    unselectedTextColor = Color.White.copy(alpha = 0.5f),
+                    indicatorColor = Color.White, // Background putih saat dipilih
+                ),
             )
+
         }
     }
 }
