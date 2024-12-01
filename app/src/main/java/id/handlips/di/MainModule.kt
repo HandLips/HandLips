@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import id.handlips.BuildConfig
+import id.handlips.data.local.DataStorePreference
 import id.handlips.data.remote.ApiService
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.HistoryRepository
@@ -54,6 +55,16 @@ object MainModule {
     @Provides
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object DataStoreModule {
+        @Provides
+        @Singleton
+        fun provideDataStore(@ApplicationContext context: Context): DataStorePreference {
+            return DataStorePreference(context)
+        }
+    }
 
     @Provides
     @Singleton

@@ -7,29 +7,27 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "on_boarding_pref")
 
-class DataStorePreference(context: Context) {
+class DataStorePreference @Inject constructor(@ApplicationContext private val context: Context) {
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-    private object PreferencesKey {
-        val onBoardingKey = booleanPreferencesKey(name = "on_boarding_completed")
-    }
-
-    private val dataStore = context.dataStore
-
+    // Save onboarding state
     suspend fun saveOnBoardingState(completed: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKey.onBoardingKey] = completed
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.onBoardingCompleted] = completed
         }
     }
 
+    // Read onboarding state
     fun readOnBoardingState(): Flow<Boolean> {
-        return dataStore.data
+        return context.dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())
@@ -38,8 +36,11 @@ class DataStorePreference(context: Context) {
                 }
             }
             .map { preferences ->
-                val onBoardingState = preferences[PreferencesKey.onBoardingKey] ?: false
-                onBoardingState
+                preferences[PreferencesKeys.onBoardingCompleted] ?: false
             }
+    }
+
+    private object PreferencesKeys {
+        val onBoardingCompleted = booleanPreferencesKey("onboarding_completed")
     }
 }
