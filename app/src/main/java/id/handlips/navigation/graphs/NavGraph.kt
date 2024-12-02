@@ -12,24 +12,31 @@ import androidx.navigation.compose.navigation
 import id.handlips.R
 import id.handlips.utils.welcomePages
 import id.handlips.views.bottom_nav.BottomNavScreen
+import id.handlips.views.home.HomeViewModel
 import id.handlips.views.on_boarding.OnBoardingScreen
 import id.handlips.views.on_boarding.OnBoardingViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController, onBoardingViewModel: OnBoardingViewModel = hiltViewModel()) {
+fun NavGraph(
+    navController: NavHostController,
+    onBoardingViewModel: OnBoardingViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
     val isOnboardingCompleted by onBoardingViewModel.isOnboardingCompleted.collectAsState()
+    val isLogin = homeViewModel.isLoggin()
+
     NavHost(
         navController = navController,
-        startDestination = if(isOnboardingCompleted) Route.ONBOARDING else Route.HOME,
+        startDestination = if (isOnboardingCompleted) {
+            if (isLogin) Route.HOME else Route.AUTHENTICATION
+        } else {
+            Route.ONBOARDING
+        },
         route = Route.ROOT
     ) {
         composable(route = Route.HOME) {
             BottomNavScreen(
                 onCLickLogout = {
-                    navController.popBackStack()
-                    navController.navigate(Route.AUTHENTICATION)
-                },
-                onBackLogin = {
                     navController.popBackStack()
                     navController.navigate(Route.AUTHENTICATION)
                 },
@@ -49,7 +56,7 @@ fun NavGraph(navController: NavHostController, onBoardingViewModel: OnBoardingVi
                     navController.navigate(DetailsScreen.Guide.route)
                 },
                 onClickGantiPassword = {
-                    navController.navigate(Screen.ChangePassword.route)
+                    navController.navigate(Screen.ForgotPassword.route)
                 })
         }
         composable(route = Route.ONBOARDING) {

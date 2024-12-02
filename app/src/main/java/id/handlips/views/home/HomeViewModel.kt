@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val authRepository: AuthRepository, private val historyRepository: HistoryRepository, private val profileRepository: ProfileRepository) : ViewModel() {
-    fun getCurrentEmail() : String {
-        return authRepository.getCurrentUser()?.email.toString()
+    fun getCurrent() : FirebaseUser? {
+        return authRepository.getCurrentUser()
     }
 
     fun getProfile(email: String) = profileRepository.getProfile(email)

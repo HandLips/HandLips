@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import id.handlips.views.auth.change_password.ChangePasswordScreen
 import id.handlips.views.customer_service.CustomerServiceScreen
 import id.handlips.views.guide.GuideScreen
 import id.handlips.views.history.HistoryScreen

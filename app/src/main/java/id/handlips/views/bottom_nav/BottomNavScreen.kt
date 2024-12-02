@@ -27,7 +27,6 @@ import id.handlips.ui.theme.Blue
 @Composable
 fun BottomNavScreen(
     onCLickLogout: () -> Unit,
-    onBackLogin: () -> Unit,
     onClickSubscribe: () -> Unit,
     onClickEvent: () -> Unit,
     onClickGuide: () -> Unit,
@@ -44,7 +43,6 @@ fun BottomNavScreen(
             BottomNavGraph(
                 navController = navController,
                 onCLick = onCLickLogout,
-                onBackLogin = onBackLogin,
                 onClickSubscribe = onClickSubscribe,
                 onClickEvent = onClickEvent,
                 onClickGuide = onClickGuide,

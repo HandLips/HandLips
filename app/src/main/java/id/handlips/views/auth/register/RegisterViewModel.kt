@@ -1,12 +1,16 @@
 package id.handlips.views.auth.register
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.handlips.data.model.ProfileResponse
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.ProfileRepository
+import id.handlips.utils.GoogleSignInState
 import id.handlips.utils.Resource
 import id.handlips.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +26,24 @@ class RegisterViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState<ProfileResponse>>(UiState.Initial)
     val uiState = _uiState.asStateFlow()
 
+    private val _googleState = mutableStateOf(GoogleSignInState())
+    val googleState: State<GoogleSignInState> = _googleState
+
+    fun googleSignIn(credential: AuthCredential) = viewModelScope.launch {
+        authRepository.signInWithGoogle(credential).collect { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _googleState.value = GoogleSignInState(success = result.data)
+                }
+                is Resource.Loading -> {
+                    _googleState.value = GoogleSignInState(loading = true)
+                }
+                is Resource.Error -> {
+                    _googleState.value = GoogleSignInState(error = result.message!!)
+                }
+            }
+        }
+    }
     fun signUp(email: String, password: String, name: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading

@@ -1,6 +1,9 @@
 package id.handlips.di
 
 import android.content.Context
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -56,15 +59,7 @@ object MainModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object DataStoreModule {
-        @Provides
-        @Singleton
-        fun provideDataStore(@ApplicationContext context: Context): DataStorePreference {
-            return DataStorePreference(context)
-        }
-    }
+
 
     @Provides
     @Singleton
@@ -95,6 +90,31 @@ object MainModule {
     ): HistoryRepository {
         return HistoryRepository(apiService, context)
     }
+}
 
+@Module
+@InstallIn(SingletonComponent::class)
+object DataStoreModule {
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStorePreference {
+        return DataStorePreference(context)
+    }
+}
 
+@Module
+@InstallIn(SingletonComponent::class)
+object GoogleSignInModule {
+    @Provides
+    @Singleton
+    fun provideGoogleSignInClient(
+        @ApplicationContext context: Context
+    ): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.API_KEY)
+            .requestEmail()
+            .build()
+
+        return GoogleSignIn.getClient(context, gso)
+    }
 }

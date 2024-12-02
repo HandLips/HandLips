@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -389,12 +390,17 @@ private fun SoundGrid(
     notFound: Boolean
 ) {
     if (notFound) {
-        Text(
-            text = "Tidak ada data",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 25.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(R.string.there_is_no_sound),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+            )
+        }
     }
     LazyVerticalGrid(
         modifier = modifier,

@@ -58,18 +58,17 @@ import id.handlips.utils.formatDate
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    backLogin: () -> Unit,
     onClickSubscripe: () -> Unit,
     onClickEvent: () -> Unit
 ) {
-    val getEmail = viewModel.getCurrentEmail()
-    Log.d("HomeScreen", "Current Email: $getEmail")
+    val getEmail = viewModel.getCurrent()?.email.toString()
+    val getDisplayName = viewModel.getCurrent()?.displayName.toString()
     var profile by remember { mutableStateOf<DataProfile?>(null) }
     var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
-
+    val name = if (getDisplayName.isNotBlank()) {getDisplayName} else if(profile?.name?.isNotBlank()!!){ profile?.name } else stringResource(R.string.guest)
     LaunchedEffect(Unit) {
 //        viewModel.getHistory().observeForever { resource ->
 //            when (resource) {
@@ -105,19 +104,10 @@ fun HomeScreen(
                     profile = resource.data.data
                     Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
                 }
-
                 is Resource.Error -> {
                     loading = false
-                    dialogError = true
-                    textError = resource.message
-                    Log.e("HomeScreen", "Error fetching profile: ${resource.message}")
                 }
             }
-        }
-
-        if (!viewModel.isLoggin()) {
-            Log.d("HomeScreen", "User not logged in. Redirecting to login.")
-            backLogin()
         }
     }
 
@@ -154,7 +144,7 @@ fun HomeScreen(
                     Text(
                         text = stringResource(
                             R.string.hai_user,
-                            profile?.name ?: stringResource(R.string.guest)
+                            name!!
                         ),
                         fontSize = 12.sp,
                         fontFamily = poppins,
@@ -270,7 +260,6 @@ fun HomeScreen(
                             )
                         }
                     } else {
-                        Log.d("HomeScreen", "No history data available.")
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -278,7 +267,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(R.string.tidak_ada_history),
+                                text = stringResource(R.string.there_is_no_history),
                                 fontFamily = poppins,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 12.sp,

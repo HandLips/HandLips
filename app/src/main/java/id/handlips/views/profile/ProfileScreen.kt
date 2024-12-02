@@ -29,6 +29,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import id.handlips.ui.theme.Blue
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,9 +51,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import id.handlips.component.button.LongButton
 import id.handlips.R
+import id.handlips.component.dialog.DialogError
 import id.handlips.ui.theme.poppins
+import id.handlips.utils.Constraint.clientId
 
 @Composable
 fun ProfileScreen(
@@ -60,12 +70,24 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .requestIdToken(clientId)
+        .build()
+    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    var dialogError by remember { mutableStateOf(false) }
+    var textError by remember { mutableStateOf("") }
+    if (dialogError) {
+        DialogError(onDismissRequest = { dialogError = false }, textError = textError)
+    }
     Scaffold(modifier = modifier.fillMaxSize()) { paddingValues ->
         Column(
             modifier =
             Modifier
                 .fillMaxSize()
-                .padding(paddingValues).padding(16.dp)
+                .padding(paddingValues)
+                .padding(16.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,9 +110,11 @@ fun ProfileScreen(
                     drawCircle(color = Color.Blue, style = Stroke(width = 3f))
                 }
                 Spacer(Modifier.width(8.dp))
-                Text("Reguler", style = TextStyle(
-                    fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 12.sp
-                ))
+                Text(
+                    "Reguler", style = TextStyle(
+                        fontFamily = poppins, fontWeight = FontWeight.Normal, fontSize = 12.sp
+                    )
+                )
             }
             Spacer(Modifier.height(12.dp))
             Text("Ivan Try Wicaksono", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -107,16 +131,50 @@ fun ProfileScreen(
             ) { Text("Edit Profile") }
 
             Section("Inventaris") {
-                SectionItem("Langganan", "Ayo mulai berlangganan", onClickItem = onClickLangganan, color = Color.Green, icon = R.drawable.ic_payment)
-                SectionItem("Customer Service", "Kami siap membantu",  onClickItem = onClickCustomerService, color = Blue, icon = R.drawable.ic_customer_service)
-                SectionItem("Guide", "Semua menjadi mudah", false, onClickItem = onClickGuide, color = Color.Cyan, icon = R.drawable.ic_bolt)
+                SectionItem(
+                    "Langganan",
+                    "Ayo mulai berlangganan",
+                    onClickItem = onClickLangganan,
+                    color = Color.Green,
+                    icon = R.drawable.ic_payment
+                )
+                SectionItem(
+                    "Customer Service",
+                    "Kami siap membantu",
+                    onClickItem = onClickCustomerService,
+                    color = Blue,
+                    icon = R.drawable.ic_customer_service
+                )
+                SectionItem(
+                    "Guide",
+                    "Semua menjadi mudah",
+                    false,
+                    onClickItem = onClickGuide,
+                    color = Color.Cyan,
+                    icon = R.drawable.ic_bolt
+                )
             }
 
             Section("Pengaturan") {
-                SectionItem("Ganti Password", "Jaga keamanan data", onClickItem = onCickGantiPassword, color = Color.Black.copy(alpha = 0.9f), icon = R.drawable.ic_change_password)
+                SectionItem(
+                    "Ganti Password",
+                    "Jaga keamanan data",
+                    onClickItem = onCickGantiPassword,
+                    color = Color.Black.copy(alpha = 0.9f),
+                    icon = R.drawable.ic_change_password
+                )
                 SectionItem("Log Out", "Yakin Mau Log Out", false, onClickItem = {
-                    if (viewModel.logout()) {
-                        onClickLogout()
+                    googleSignInClient.signOut().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Google sign-out berhasil
+                            if (viewModel.logout()) {
+                                // Jika logout berhasil di ViewModel, panggil onClickLogout()
+                                onClickLogout()
+                            }
+                        } else {
+                            dialogError = true
+                            textError = "Google sign-out failed: ${task.exception?.message}"
+                        }
                     }
                 }, color = Color.Red, icon = R.drawable.ic_logout)
             }

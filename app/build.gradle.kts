@@ -20,7 +20,7 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "BASE_URL", "\"https://capstone-api-442707.et.r.appspot.com/\"")
-        buildConfigField("String", "VERTEX_API", "\"https://aiplatform.googleapis.com/\"")
+        buildConfigField("String", "API_KEY", "\"781360183750-rfrqj37aemvv99m4im625ooscp3ui4vm.apps.googleusercontent.com\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -127,4 +127,6 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.extensions)
+    implementation (libs.gms.play.services.auth)
+
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">handlips</string>
+    <string name="app_name">Handlips</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="send">Send</string>
     <string name="label_email">Enter email</string>
@@ -105,4 +105,7 @@
     <string name="berhasil_menambah_shortcut">Successfully added shortcut</string>
     <string name="success">Success!</string>
     <string name="succes_create">Success create %1$s</string>
+    <string name="email_required">Email required</string>
+    <string name="there_is_no_sound">there is no sound</string>
+    <string name="there_is_no_history">there is no History</string>
 </resources>

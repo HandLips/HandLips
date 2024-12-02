@@ -1,9 +1,8 @@
 package id.handlips.views.auth.login
 
-import android.content.Context
-import android.util.Log
-import androidx.compose.foundation.background
-import id.handlips.component.button.LongButton
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import id.handlips.R
 import id.handlips.component.button.GoogleButton
+import id.handlips.component.button.LongButton
 import id.handlips.component.dialog.DialogError
 import id.handlips.component.dialog.DialogSuccess
 import id.handlips.component.loading.LoadingAnimation
@@ -44,12 +46,12 @@ import id.handlips.component.textfield.EmailTextField
 import id.handlips.component.textfield.PasswordTextField
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.poppins
+import id.handlips.utils.Constraint.clientId
 import id.handlips.utils.UiState
 
 @Composable
 fun LoginScreen(
     onClickLogin: () -> Unit,
-    onClickGoogle: () -> Unit,
     onClickRegister: () -> Unit,
     onClickForgotPassword: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -64,6 +66,20 @@ fun LoginScreen(
     var errorMessage by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
+
+    val googleSignInState = viewModel.googleState.value
+// Launcher untuk Google Sign-In
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            val account = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val result = account.getResult(ApiException::class.java)
+                val credentials = GoogleAuthProvider.getCredential(result.idToken, null)
+                viewModel.googleSignIn(credentials)
+            } catch (it: ApiException) {
+                print(it)
+            }
+        }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -151,7 +167,12 @@ fun LoginScreen(
         GoogleButton(
             text = stringResource(R.string.btn_google_login),
             onClick = {
-                onClickGoogle()
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestIdToken(clientId)
+                    .build()
+                val googleSingInClient = GoogleSignIn.getClient(context, gso)
+                launcher.launch(googleSingInClient.signInIntent)
             }
         )
 
@@ -177,6 +198,7 @@ fun LoginScreen(
                     color = Blue
                 )
             }
+
         }
     }
 
@@ -197,7 +219,7 @@ fun LoginScreen(
     }
 
     // Dialogs and Loading
-    if (showDialogSuccess) {
+    if (showDialogSuccess || googleSignInState.success != null) {
         DialogSuccess(
             onDismissRequest = {
                 onClickLogin()
@@ -215,7 +237,7 @@ fun LoginScreen(
         )
     }
 
-    if (uiState is UiState.Loading) {
+    if (uiState is UiState.Loading || googleSignInState.loading) {
         LoadingAnimation()
     }
 }
