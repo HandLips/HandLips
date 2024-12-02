@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,16 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import id.handlips.component.card.CardComponent
-import id.handlips.data.model.DataHistory
+import id.handlips.component.bubble_chat.ChatBubbleComponent
 import id.handlips.ui.theme.White
-import id.handlips.utils.formatDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(modifier: Modifier = Modifier) {
-    var histories by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
+fun DetailHistoryScreen(modifier: Modifier = Modifier) {
+    // TODO: Model class for chat (message) in History Response
+    var chats by remember { mutableStateOf<List<String>>(emptyList()) }
     val state = rememberLazyListState()
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -42,6 +43,14 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             "",
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* do something */ }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = "Localized description",
                         )
                     }
                 },
@@ -56,17 +65,6 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
             )
         },
     ) { paddingValues ->
-//        Column(
-//            modifier =
-//                Modifier
-//                    .fillMaxSize()
-//                    .padding(paddingValues)
-//                    .padding(16.dp),
-//            verticalArrangement = Arrangement.Top,
-//            horizontalAlignment = Alignment.Start,
-//        ) {
-//            Text(text = "Welcome to History")
-//        }
         LazyColumn(
             state = state,
             modifier =
@@ -76,20 +74,19 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
                     .padding(16.dp),
         ) {
             // Preview
-            items(10) {
-                CardComponent(
-                    title = "Judul",
-                    sumChat = "20",
-                    date = formatDate("2024-11-29T11:47:48.000Z"),
-                    onClick = { null },
+            items(10) { index ->
+                ChatBubbleComponent(
+                    message = "Test chat",
+                    time = "Test time",
+                    isFromMe = index % 2 == 0,
                 )
             }
-            items(histories) { history ->
-                CardComponent(
-                    title = history.title.trim(),
-                    sumChat = history.message?.size.toString(),
-                    date = formatDate(history.createdAt),
-                    onClick = { null },
+
+            items(chats) { chat ->
+                ChatBubbleComponent(
+                    message = chat,
+                    time = "TODO",
+                    isFromMe = false,
                 )
             }
         }
@@ -98,6 +95,6 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun HistoryPreview() {
-    HistoryScreen()
+private fun DetailHistoryPreview() {
+    DetailHistoryScreen()
 }
