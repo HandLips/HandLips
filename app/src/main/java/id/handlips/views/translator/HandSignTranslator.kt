@@ -66,6 +66,11 @@ import id.handlips.ui.theme.HandlipsTheme
 import id.handlips.ui.theme.Red
 import id.handlips.ui.theme.White
 
+enum class TranslatorMode {
+    HAND_SIGN,
+    SPEECH,
+}
+
 class HandSignTranslator : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +91,7 @@ class HandSignTranslator : ComponentActivity() {
 @Composable
 fun ResultBoard(
     result: String,
-    isSpeechToText: Boolean = false,
+    translatorMode: TranslatorMode = TranslatorMode.HAND_SIGN,
 ) {
     Card(
         shape =
@@ -118,17 +123,19 @@ fun ResultBoard(
                         .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (isSpeechToText) {
-                    CircleButton(
-                        icon = Icons.Filled.Star,
-                        containerColor = Red,
-                        contentColor = White,
-                        onClick = {},
-                        contentDescription = "",
-                        size = 120,
-                    )
-                } else {
-                    Text(result, fontSize = 20.sp)
+                when (translatorMode) {
+                    TranslatorMode.SPEECH -> {
+                        CircleButton(
+                            icon = Icons.Filled.Star,
+                            containerColor = Red,
+                            contentColor = White,
+                            onClick = {},
+                            contentDescription = "",
+                            size = 120,
+                        )
+                    }
+
+                    TranslatorMode.HAND_SIGN -> Text(result, fontSize = 20.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -229,7 +236,8 @@ fun CameraScreen() {
 fun CameraPreview(modifier: Modifier = Modifier.fillMaxSize()) {
     val context: Context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    val cameraController: LifecycleCameraController = remember { LifecycleCameraController(context) }
+    val cameraController: LifecycleCameraController =
+        remember { LifecycleCameraController(context) }
 
     AndroidView(
         modifier = modifier,
@@ -254,12 +262,19 @@ fun CameraPreview(modifier: Modifier = Modifier.fillMaxSize()) {
 @Composable
 private fun HandSignTranslatorPreview() {
     HandlipsTheme {
-        val isSpeechToText: Boolean = false
+        val translatorMode: TranslatorMode = TranslatorMode.HAND_SIGN
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
-                    navigationIcon = { IconButton({ null }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "") } },
+                    navigationIcon = {
+                        IconButton({ null }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                "",
+                            )
+                        }
+                    },
                     colors =
                         TopAppBarDefaults.topAppBarColors(
                             containerColor = White,
@@ -279,13 +294,15 @@ private fun HandSignTranslatorPreview() {
                         .fillMaxSize()
                         .padding(innerPadding),
             ) {
-                if (isSpeechToText) {
-                    Text("Speech to Text Result")
-                } else {
-                    Text("Camera Preview")
-//                CameraPreview()
+                when (translatorMode) {
+                    TranslatorMode.HAND_SIGN -> Text("Camera Preview") // CameraPreview()
+                    TranslatorMode.SPEECH -> Text("Speech to Text Result")
                 }
-                ResultBoard(isSpeechToText = isSpeechToText, result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?")
+
+                ResultBoard(
+                    translatorMode = translatorMode,
+                    result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?",
+                )
             }
         }
     }

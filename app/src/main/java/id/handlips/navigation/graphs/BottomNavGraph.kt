@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import id.handlips.views.home.HomeScreen
 import id.handlips.views.profile.ProfileScreen
 import id.handlips.views.shortcut.ShortcutScreen
-import id.handlips.views.translator.CommunicationScreen
+import id.handlips.views.translator.ChatScreen
 
 @Composable
 fun BottomNavGraph(
@@ -29,7 +29,7 @@ fun BottomNavGraph(
             HomeScreen( onClickSubscripe = onClickSubscribe, onClickEvent = onClickEvent)
         }
         composable(route = BottomBarScreen.Chat.route) {
-            CommunicationScreen()
+            ChatScreen()
         }
         composable(route = BottomBarScreen.Shortcut.route){
             ShortcutScreen(navHostController = navController)
