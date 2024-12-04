@@ -86,12 +86,10 @@ fun ShortcutScreen(
                 is Resource.Loading -> {
                     loading = true
                 }
-
                 is Resource.Success -> {
                     loading = false
                     listSound = resource.data.data
                 }
-
                 is Resource.Error -> {
                     loading = false
                     notFound = true
@@ -103,17 +101,20 @@ fun ShortcutScreen(
             is UiState.Success -> {
                 showDialogSuccess = true // Tampilkan dialog sukses
             }
-
             is UiState.Error -> {
                 textError = (uiState as UiState.Error).message
                 dialogError = true
             }
-
             else -> {
                 // Tangani kondisi lain jika diperlukan
             }
         }
     }
+
+    if(loading || uiState is UiState.Loading) {
+        LoadingAnimation()
+    }
+
     if (dialogError) {
         DialogError(
             onDismissRequest = {
