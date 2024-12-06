@@ -28,9 +28,6 @@ data class SoundResponse(
 
 data class DataItem(
 
-	@field:SerializedName("createdAt")
-	val createdAt: String,
-
 	@field:SerializedName("audioUrl")
 	val audioUrl: String,
 
@@ -42,4 +39,7 @@ data class DataItem(
 
 	@field:SerializedName("text")
 	val text: String,
+
+	@field:SerializedName("title")
+	val title: String
 )

@@ -333,7 +333,7 @@ private fun SoundCard(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = sound.text,
+                text = sound.title,
                 color = White,
                 fontWeight = FontWeight.Medium,
                 maxLines = 1
