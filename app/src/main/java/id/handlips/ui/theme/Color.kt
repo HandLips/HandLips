@@ -10,9 +10,8 @@ val White = Color.White
 val Red = Color(0xFFEC221F)
 val Green = Color(0xFF32A852)
 
-val Shapes = Shapes(
+val Shapes = Shapes (
     small = RoundedCornerShape(4.dp),
     medium = RoundedCornerShape(8.dp),
     large = RoundedCornerShape(16.dp)
-
 )
