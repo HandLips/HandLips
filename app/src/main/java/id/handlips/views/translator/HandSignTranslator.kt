@@ -61,6 +61,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import id.handlips.component.button.CircleButton
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.HandlipsTheme
 import id.handlips.ui.theme.Red
@@ -87,7 +88,6 @@ class HandSignTranslator : ComponentActivity() {
     }
 }
 
-@Suppress("ktlint:standard:function-naming")
 @Composable
 fun ResultBoard(
     result: String,
@@ -159,39 +159,7 @@ fun ResultBoard(
     }
 }
 
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun CircleButton(
-    icon: ImageVector,
-    containerColor: Color = Blue,
-    contentColor: Color = White,
-    onClick: () -> Unit,
-    contentDescription: String,
-    size: Int = 94,
-) {
-    val iconSize = size - (size / 1.5)
-    LargeFloatingActionButton(
-        onClick = {
-            onClick
-        },
-        shape = CircleShape,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        modifier =
-            Modifier
-                .shadow(
-                    elevation = 24.dp,
-                    shape = CircleShape,
-                    spotColor = White,
-                ).size(size.dp),
-    ) {
-        Icon(
-            icon,
-            contentDescription,
-            modifier = Modifier.size(iconSize.dp),
-        )
-    }
-}
+
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
