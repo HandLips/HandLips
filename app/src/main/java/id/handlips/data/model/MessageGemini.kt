@@ -1,7 +1,7 @@
 package id.handlips.data.model
 
-class MessageGemini (
+data class MessageGemini(
     val text: String,
-    val time: String,
-    val isFromMe: Boolean
+    val isFromMe: Boolean,
+    val time: String
 )

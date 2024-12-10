@@ -34,6 +34,7 @@ navigationCompose = "2.8.4"
 firebaseAuthKtx = "23.1.0"
 firebaseAuth = "23.1.0"
 firebaseVertexai = "16.0.2"
+coreI18n = "1.0.0-alpha01"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -80,6 +81,7 @@ firebase-vertexai = { group = "com.google.firebase", name = "firebase-vertexai",
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

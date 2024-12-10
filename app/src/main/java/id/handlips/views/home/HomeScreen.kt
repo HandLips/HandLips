@@ -1,7 +1,6 @@
 package id.handlips.views.home
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,10 +65,10 @@ fun HomeScreen(
     val getDisplayName = viewModel.getCurrent()?.displayName.toString()
     val getPhotoUrl = viewModel.getCurrent()?.photoUrl.toString()
     var profile by remember { mutableStateOf<DataProfile?>(null) }
-    var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
+    val historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
-    var textError by remember { mutableStateOf("") }
+    val textError by remember { mutableStateOf("") }
     val name = if (getDisplayName.isNotBlank()) {getDisplayName} else if(profile?.name?.isNotBlank()!!){ profile?.name } else stringResource(R.string.guest)
     LaunchedEffect(Unit) {
 //        viewModel.getHistory().observeForever { resource ->
@@ -304,8 +303,8 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
     ) {
         CardMenu(
             modifier = Modifier.size(100.dp),
-            id = R.drawable.ic_calender,
-            title = stringResource(R.string.eventicle),
+            id = R.drawable.ic_chatbot,
+            title = stringResource(R.string.chat_bot),
             onClick = onClickEvent
         )
 

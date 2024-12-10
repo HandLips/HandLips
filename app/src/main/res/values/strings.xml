@@ -109,4 +109,5 @@
     <string name="there_is_no_sound">there is no sound</string>
     <string name="there_is_no_history">there is no History</string>
     <string name="logo">logo</string>
+    <string name="chat_bot">Chat Bot</string>
 </resources>

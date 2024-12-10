@@ -13,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import id.handlips.BuildConfig
 import id.handlips.data.local.DataStorePreference
 import id.handlips.data.remote.ApiService
+import id.handlips.data.remote.GeminiService
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.HistoryRepository
 import id.handlips.data.repository.ProfileRepository
@@ -20,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -45,11 +47,20 @@ object MainModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class DefaultRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GeminiRetrofit
+
+
     @Provides
     @Singleton
+    @DefaultRetrofit
     fun provideRetrofit(client: OkHttpClient): Retrofit =
-        Retrofit
-            .Builder()
+        Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
@@ -57,8 +68,23 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    @GeminiRetrofit
+    fun provideGemini(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.GEMINI_API)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
 
+    @Provides
+    @Singleton
+    fun provideApiService(@DefaultRetrofit retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideGeminiService(@GeminiRetrofit retrofit: Retrofit): GeminiService =
+        retrofit.create(GeminiService::class.java)
 
 
     @Provides
@@ -77,7 +103,6 @@ object MainModule {
     @Singleton
     fun provideProfileRepository(
         apiService: ApiService,
-        auth: AuthRepository
     ): ProfileRepository {
         return ProfileRepository (apiService)
     }
