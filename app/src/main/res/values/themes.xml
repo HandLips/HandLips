@@ -2,8 +2,7 @@
     <!-- Base application theme. -->
 
     <style name="Theme.Handlips.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/blue</item>
-        <item name="windowSplashScreenAnimatedIcon"></item>
+        <item name="windowSplashScreenBackground">@color/logo</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.Handlips</item>
     </style>

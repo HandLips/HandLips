@@ -27,10 +27,10 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = if (isOnboardingCompleted) {
-            if (isLogin) Route.HOME else Route.AUTHENTICATION
+        startDestination = if (isLogin) {
+            Route.HOME
         } else {
-            Route.ONBOARDING
+            if (isOnboardingCompleted) Route.AUTHENTICATION else Route.ONBOARDING
         },
         route = Route.ROOT
     ) {
