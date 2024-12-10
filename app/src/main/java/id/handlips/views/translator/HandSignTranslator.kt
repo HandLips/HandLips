@@ -88,76 +88,7 @@ class HandSignTranslator : ComponentActivity() {
     }
 }
 
-@Composable
-fun ResultBoard(
-    result: String,
-    translatorMode: TranslatorMode = TranslatorMode.HAND_SIGN,
-) {
-    Card(
-        shape =
-            RoundedCornerShape(
-                topStart = 20.dp,
-                topEnd = 20.dp,
-            ),
-        border = BorderStroke(width = 1.dp, color = Blue),
-    ) {
-        Box(
-            modifier =
-                Modifier
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                colors =
-                                    listOf(
-                                        White,
-                                        White,
-                                        White,
-                                        Blue,
-                                    ),
-                            ),
-                    ).padding(16.dp), // Padding inside the card
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                when (translatorMode) {
-                    TranslatorMode.SPEECH -> {
-                        CircleButton(
-                            icon = Icons.Filled.Star,
-                            containerColor = Red,
-                            contentColor = White,
-                            onClick = {},
-                            contentDescription = "",
-                            size = 120,
-                        )
-                    }
 
-                    TranslatorMode.HAND_SIGN -> Text(result, fontSize = 20.sp)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    CircleButton(
-                        icon = Icons.Filled.Refresh,
-                        onClick = { null },
-                        contentDescription = "Riwayat Percakapan",
-                    )
-                    CircleButton(
-                        icon = Icons.Filled.Call,
-                        onClick = { null },
-                        contentDescription = "Terjemah Suara ke Teks",
-                    )
-                }
-            }
-        }
-    }
-}
 
 
 
