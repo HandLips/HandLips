@@ -72,6 +72,7 @@ fun TranslatorScreen() {
     var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
     var resultText by remember { mutableStateOf("") }
     var inferenceTimeText by remember { mutableStateOf("") }
+
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -81,16 +82,35 @@ fun TranslatorScreen() {
         )
     }
 
-    val permissionLauncher =
+    var hasMicrophonePermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO,
+            ) == PackageManager.PERMISSION_GRANTED,
+        )
+    }
+
+    val cameraPermissionLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
         ) { isGranted ->
             hasCameraPermission = isGranted
         }
 
+    val microphonePermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            hasMicrophonePermission = isGranted
+        }
+
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+        if (!hasMicrophonePermission) {
+            microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
         }
     }
 
