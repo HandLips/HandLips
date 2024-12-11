@@ -24,9 +24,7 @@ fun CircleButton(
 ) {
     val iconSize = size - (size / 1.5)
     LargeFloatingActionButton(
-        onClick = {
-            onClick
-        },
+        onClick = onClick,
         shape = CircleShape,
         containerColor = containerColor,
         contentColor = contentColor,

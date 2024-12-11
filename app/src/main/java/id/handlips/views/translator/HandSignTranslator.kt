@@ -3,6 +3,7 @@ package id.handlips.views.translator
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -115,7 +116,49 @@ fun TranslatorScreen() {
     }
 
     if (hasCameraPermission) {
-        CameraPreview()
+        Box(modifier = Modifier.fillMaxSize()) {
+            when (translatorMode) {
+                TranslatorMode.HAND_SIGN -> {
+                    Box(modifier = Modifier.align(Alignment.TopCenter)) {
+                        CameraPreview(
+                            onClassificationResults = { results, inferenceTime ->
+                                resultText = results
+                                inferenceTimeText = inferenceTime
+                            },
+                        )
+                    }
+                }
+
+                TranslatorMode.SPEECH ->
+                    Text(
+                        resultText,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
+            }
+
+            ResultBoard(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                result = "result: $resultText inference: $inferenceTimeText",
+                translatorMode = translatorMode,
+                speechState = speechState,
+                onClickTranslatorMode = {
+                    Log.e("TranslatorScreen", "onClickTranslatorMode: $translatorMode")
+                    translatorMode =
+                        when (translatorMode) {
+                            TranslatorMode.HAND_SIGN -> TranslatorMode.SPEECH
+                            TranslatorMode.SPEECH -> TranslatorMode.HAND_SIGN
+                        }
+                },
+                onSpeechButtonClick = {
+                    Log.e("TranslatorScreen", "onSpeechButtonClick: $speechState")
+                    speechState =
+                        when (speechState) {
+                            SpeechState.RECORDING -> SpeechState.STOPPED
+                            SpeechState.STOPPED -> SpeechState.RECORDING
+                        }
+                },
+            )
+        }
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -170,10 +213,10 @@ private fun HandSignTranslatorPreview() {
                     TranslatorMode.SPEECH -> Text("Speech to Text Result")
                 }
 
-                ResultBoard(
-                    translatorMode = translatorMode,
-                    result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?",
-                )
+//                ResultBoard(
+//                    translatorMode = translatorMode,
+//                    result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?",
+//                )
             }
         }
     }
