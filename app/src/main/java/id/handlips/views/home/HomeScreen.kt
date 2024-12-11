@@ -1,7 +1,6 @@
 package id.handlips.views.home
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import id.handlips.R
 import id.handlips.component.card.CardComponent
 import id.handlips.component.dialog.DialogError
@@ -63,11 +63,12 @@ fun HomeScreen(
 ) {
     val getEmail = viewModel.getCurrent()?.email.toString()
     val getDisplayName = viewModel.getCurrent()?.displayName.toString()
+    val getPhotoUrl = viewModel.getCurrent()?.photoUrl.toString()
     var profile by remember { mutableStateOf<DataProfile?>(null) }
-    var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
+    val historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
-    var textError by remember { mutableStateOf("") }
+    val textError by remember { mutableStateOf("") }
     val name = if (getDisplayName.isNotBlank()) {getDisplayName} else if(profile?.name?.isNotBlank()!!){ profile?.name } else stringResource(R.string.guest)
     LaunchedEffect(Unit) {
 //        viewModel.getHistory().observeForever { resource ->
@@ -152,12 +153,12 @@ fun HomeScreen(
                         color = White,
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = stringResource(R.string.profile_picture),
+                    AsyncImage(
+                        model = getPhotoUrl,
+                        contentDescription = stringResource(R.string.logo),
                         modifier = Modifier
-                            .size(48.dp)
                             .clip(CircleShape)
+                            .size(45.dp)
                     )
                 }
             }
@@ -189,15 +190,13 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
+                            AsyncImage(
+                                model = R.mipmap.ic_logo_handlips_round, // URL atau resource drawable
+                                contentDescription = stringResource(R.string.logo),
                                 modifier = Modifier
-                                    .size(90.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.Gray),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "Logo", color = White)
-                            }
+                                    .padding(bottom = 20.dp)
+                                    .size(80.dp)
+                            )
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
@@ -304,8 +303,8 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
     ) {
         CardMenu(
             modifier = Modifier.size(100.dp),
-            id = R.drawable.ic_calender,
-            title = stringResource(R.string.eventicle),
+            id = R.drawable.ic_chatbot,
+            title = stringResource(R.string.chat_bot),
             onClick = onClickEvent
         )
 
