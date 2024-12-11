@@ -13,9 +13,11 @@ import dagger.hilt.components.SingletonComponent
 import id.handlips.BuildConfig
 import id.handlips.data.local.DataStorePreference
 import id.handlips.data.remote.ApiService
+import id.handlips.data.remote.SpeechToTextApiService
 import id.handlips.data.repository.AuthRepository
 import id.handlips.data.repository.HistoryRepository
 import id.handlips.data.repository.ProfileRepository
+import id.handlips.data.repository.SpeechToTextRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -45,6 +47,7 @@ object MainModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
+    @MainRetrofit
     @Provides
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit =
@@ -55,11 +58,27 @@ object MainModule {
             .client(client)
             .build()
 
+    @SpeechToTextRetrofit
+    @Provides
+    fun provideSpeechRetrofit(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl("https://jayajaya.et.r.appspot.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @SpeechToTextRetrofit
+    @Provides
+    fun provideSpeechToTextApi(retrofit: Retrofit): SpeechToTextApiService = retrofit.create(SpeechToTextApiService::class.java)
+
+    @SpeechToTextRetrofit
+    @Provides
+    fun provideSpeechToTextRepository(api: SpeechToTextApiService): SpeechToTextRepository = SpeechToTextRepository(api)
+
+    @MainRetrofit
     @Provides
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
-
-
 
     @Provides
     @Singleton
@@ -67,29 +86,21 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        auth: FirebaseAuth
-    ): AuthRepository {
-        return AuthRepository(auth)
-    }
+    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepository(auth)
 
     @Provides
     @Singleton
     fun provideProfileRepository(
         apiService: ApiService,
-        auth: AuthRepository
-    ): ProfileRepository {
-        return ProfileRepository (apiService)
-    }
+        auth: AuthRepository,
+    ): ProfileRepository = ProfileRepository(apiService)
 
     @Provides
     @Singleton
     fun provideHistoryRepository(
         apiService: ApiService,
-        @ApplicationContext context: Context
-    ): HistoryRepository {
-        return HistoryRepository(apiService, context)
-    }
+        @ApplicationContext context: Context,
+    ): HistoryRepository = HistoryRepository(apiService, context)
 }
 
 @Module
@@ -97,9 +108,9 @@ object MainModule {
 object DataStoreModule {
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStorePreference {
-        return DataStorePreference(context)
-    }
+    fun provideDataStore(
+        @ApplicationContext context: Context,
+    ): DataStorePreference = DataStorePreference(context)
 }
 
 @Module
@@ -108,12 +119,14 @@ object GoogleSignInModule {
     @Provides
     @Singleton
     fun provideGoogleSignInClient(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): GoogleSignInClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(BuildConfig.API_KEY)
-            .requestEmail()
-            .build()
+        val gso =
+            GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(BuildConfig.API_KEY)
+                .requestEmail()
+                .build()
 
         return GoogleSignIn.getClient(context, gso)
     }
