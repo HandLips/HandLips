@@ -43,6 +43,11 @@ enum class TranslatorMode {
     SPEECH,
 }
 
+enum class SpeechState {
+    RECORDING,
+    STOPPED,
+}
+
 class HandSignTranslator : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +56,7 @@ class HandSignTranslator : ComponentActivity() {
             HandlipsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                        CameraScreen()
+                        TranslatorScreen()
                     }
                 }
             }
@@ -61,8 +66,12 @@ class HandSignTranslator : ComponentActivity() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun CameraScreen() {
+fun TranslatorScreen() {
     val context = LocalContext.current
+    var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.SPEECH) }
+    var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
+    var resultText by remember { mutableStateOf("") }
+    var inferenceTimeText by remember { mutableStateOf("") }
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
