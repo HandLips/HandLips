@@ -21,6 +21,7 @@ android {
 
         buildConfigField("String", "BASE_URL", "\"https://capstone-api-442707.et.r.appspot.com/\"")
         buildConfigField("String", "API_KEY", "\"781360183750-rfrqj37aemvv99m4im625ooscp3ui4vm.apps.googleusercontent.com\"")
+        buildConfigField("String", "GEMINI_API", "\"https://gen-lang-client-0178483398.et.r.appspot.com\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.vertexai)
+    implementation(libs.androidx.core.i18n)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
