@@ -55,6 +55,8 @@ fun CameraPreview(
         val cameraProvider = cameraProviderFuture.get()
         val imageClassifierHelper =
             ImageClassifierHelper(
+                threshold = 0f,
+                maxResults = 10,
                 modelName = "model_coba_metadata.tflite",
                 context = context,
                 classifierListener =
