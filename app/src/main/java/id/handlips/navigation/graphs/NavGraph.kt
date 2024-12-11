@@ -1,21 +1,21 @@
 package id.handlips.navigation.graphs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import id.handlips.R
 import id.handlips.utils.welcomePages
 import id.handlips.views.bottom_nav.BottomNavScreen
 import id.handlips.views.home.HomeViewModel
 import id.handlips.views.on_boarding.OnBoardingScreen
 import id.handlips.views.on_boarding.OnBoardingViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -57,7 +57,11 @@ fun NavGraph(
                 },
                 onClickGantiPassword = {
                     navController.navigate(Screen.ForgotPassword.route)
-                })
+                },
+                onClickHistory = {
+                    navController.navigate(DetailsScreen.History.route)
+                }
+            )
         }
         composable(route = Route.ONBOARDING) {
             OnBoardingScreen(

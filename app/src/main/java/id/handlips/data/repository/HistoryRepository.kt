@@ -15,11 +15,11 @@ class HistoryRepository @Inject constructor(
     private val apiService: ApiService,
     @ApplicationContext private val context: Context
 ) {
-    fun getHistory(): LiveData<Resource<HistoryResponse>> = liveData {
+    fun getHistory(email: String): LiveData<Resource<HistoryResponse>> = liveData {
         emit(Resource.Loading)
         try {
-            val response = apiService.getHistory()
-            if (response.success) {
+            val response = apiService.getHistory(email)
+            if (response.data.isNotEmpty()) {
                 emit(Resource.Success(response))
             } else {
                 emit(Resource.Error(context.getString(R.string.failed_to_fetch_data)))
@@ -28,4 +28,26 @@ class HistoryRepository @Inject constructor(
             emit(Resource.Error(e.message ?: context.getString(R.string.an_error_occurred)))
         }
     }
+
+    fun getLatestHistory(email: String): LiveData<Resource<HistoryResponse>> = liveData {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getHistory(email)
+            if (response.data.isNotEmpty()) {
+                // Urutkan berdasarkan created_at dan ambil 5 data terbaru
+                val latestData = response.data.map { historyItem ->
+                    historyItem.copy(
+                        message = historyItem.message.sortedByDescending { it?.createdAt }.take(5)
+                    )
+                }
+                val updatedResponse = response.copy(data = latestData)
+                emit(Resource.Success(updatedResponse))
+            } else {
+                emit(Resource.Error(context.getString(R.string.failed_to_fetch_data)))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: context.getString(R.string.an_error_occurred)))
+        }
+    }
+
 }

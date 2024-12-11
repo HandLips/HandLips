@@ -1,5 +1,7 @@
 package id.handlips.navigation.graphs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,13 +12,14 @@ import id.handlips.views.history.HistoryScreen
 import id.handlips.views.menu_home.gemini.GeminiScreen
 import id.handlips.views.menu_home.subscribe.SubscribeScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.detailsHomeNavGraph(navController: NavHostController, onClickBack: () -> Unit) {
     navigation(route = Route.DETAILS_HOME, startDestination = DetailsScreen.Subscribe.route){
         composable(route = DetailsScreen.Subscribe.route){
             SubscribeScreen(onCLickBack = onClickBack)
         }
         composable(route = DetailsScreen.History.route) {
-            HistoryScreen()
+            HistoryScreen(onClickBack = onClickBack)
         }
         composable(route = DetailsScreen.Event.route){
             GeminiScreen(onClickBack = onClickBack)

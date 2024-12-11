@@ -13,8 +13,10 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
-    @GET("history")
-    suspend fun getHistory(): HistoryResponse
+    @GET("history/{email}")
+    suspend fun getHistory(
+        @Path("email") email: String,
+    ): HistoryResponse
 
     @GET("soundboards/{email}")
     suspend fun getSound(

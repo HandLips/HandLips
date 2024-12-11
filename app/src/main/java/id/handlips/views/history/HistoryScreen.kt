@@ -30,7 +30,7 @@ import id.handlips.utils.formatDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(modifier: Modifier = Modifier) {
+fun HistoryScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
     var histories by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     val state = rememberLazyListState()
     Scaffold(
@@ -38,7 +38,9 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton({ null }) {
+                    IconButton(
+                        onClick = onClickBack
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             "",
@@ -88,7 +90,7 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
                 CardComponent(
                     title = history.title.trim(),
                     sumChat = history.message?.size.toString(),
-                    date = formatDate(history.createdAt),
+                    date = formatDate(history.message.last()?.createdAt ?: "Now"),
                     onClick = { null },
                 )
             }
@@ -99,5 +101,7 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun HistoryPreview() {
-    HistoryScreen()
+    HistoryScreen(
+        onClickBack = {}
+    )
 }
