@@ -72,6 +72,7 @@ fun TranslatorScreen() {
     var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.SPEECH) }
     var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
     var resultText by remember { mutableStateOf("") }
+    var speechText by remember { mutableStateOf("") }
     var inferenceTimeText by remember { mutableStateOf("") }
 
     var hasCameraPermission by remember {
@@ -131,7 +132,7 @@ fun TranslatorScreen() {
 
                 TranslatorMode.SPEECH ->
                     Text(
-                        resultText,
+                        speechText,
                         modifier = Modifier.align(Alignment.TopCenter),
                     )
             }
@@ -148,9 +149,12 @@ fun TranslatorScreen() {
                             TranslatorMode.HAND_SIGN -> TranslatorMode.SPEECH
                             TranslatorMode.SPEECH -> TranslatorMode.HAND_SIGN
                         }
+                    resultText = ""
+                    speechText = ""
                 },
                 onSpeechButtonClick = {
                     Log.e("TranslatorScreen", "onSpeechButtonClick: $speechState")
+                    resultText = ""
                     speechState =
                         when (speechState) {
                             SpeechState.RECORDING -> SpeechState.STOPPED
