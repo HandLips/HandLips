@@ -69,7 +69,7 @@ object MainModule {
 
     @SpeechToTextRetrofit
     @Provides
-    fun provideSpeechToTextApi(retrofit: Retrofit): SpeechToTextApiService = retrofit.create(SpeechToTextApiService::class.java)
+    fun provideSpeechToTextApiService(retrofit: Retrofit): SpeechToTextApiService = retrofit.create(SpeechToTextApiService::class.java)
 
     @SpeechToTextRetrofit
     @Provides
