@@ -53,8 +53,8 @@ fun ResultBoard(
 
     val speechStateIcon: Painter =
         when (speechState) {
-            SpeechState.RECORDING -> painterResource(id = R.drawable.round_stop_24)
-            SpeechState.STOPPED -> painterResource(id = R.drawable.ic_mic)
+            SpeechState.RECORDING -> painterResource(id = R.drawable.round_stop)
+            SpeechState.STOPPED -> painterResource(id = R.drawable.round_fiber_manual_record)
         }
     val translatorModeIcon: Painter =
         when (translatorMode) {
