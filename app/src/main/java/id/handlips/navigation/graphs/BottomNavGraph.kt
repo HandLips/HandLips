@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import id.handlips.views.home.HomeScreen
 import id.handlips.views.profile.ProfileScreen
 import id.handlips.views.shortcut.ShortcutScreen
-import id.handlips.views.translator.ChatScreen
+import id.handlips.views.translator.CommunicationScreen
 
 @Composable
 fun BottomNavGraph(
@@ -19,7 +19,7 @@ fun BottomNavGraph(
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
     onClickGantiPassword: () -> Unit,
-    onCreateChat: () -> Unit,
+    onClickUpdateProfile: ()-> Unit
 ) {
     NavHost(
         navController = navController,
@@ -30,13 +30,13 @@ fun BottomNavGraph(
             HomeScreen( onClickSubscripe = onClickSubscribe, onClickEvent = onClickEvent)
         }
         composable(route = BottomBarScreen.Chat.route) {
-            ChatScreen(onCreateChat = onCreateChat)
+            CommunicationScreen()
         }
         composable(route = BottomBarScreen.Shortcut.route){
             ShortcutScreen(navHostController = navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen(onClickLogout = onCLick, onClickLangganan = onClickLangganan, onClickCustomerService = onClickCustomerService, onClickGuide = onClickGuide, onCickGantiPassword = onClickGantiPassword)
+            ProfileScreen(onClickLogout = onCLick, onClickLangganan = onClickLangganan, onClickCustomerService = onClickCustomerService, onClickGuide = onClickGuide, onCickGantiPassword = onClickGantiPassword, onClickUpdateProfile = onClickUpdateProfile)
         }
 
     }

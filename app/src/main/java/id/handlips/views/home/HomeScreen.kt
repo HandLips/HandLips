@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +50,7 @@ import id.handlips.component.dialog.DialogError
 import id.handlips.component.loading.LoadingAnimation
 import id.handlips.data.model.DataHistory
 import id.handlips.data.model.DataProfile
+import id.handlips.data.model.ProfileModel
 import id.handlips.ui.theme.Blue
 import id.handlips.ui.theme.White
 import id.handlips.ui.theme.poppins
@@ -61,15 +63,32 @@ fun HomeScreen(
     onClickSubscripe: () -> Unit,
     onClickEvent: () -> Unit
 ) {
-    val getEmail = viewModel.getCurrent()?.email.toString()
-    val getDisplayName = viewModel.getCurrent()?.displayName.toString()
-    val getPhotoUrl = viewModel.getCurrent()?.photoUrl.toString()
+    val context = LocalContext.current
+    val currentUser = viewModel.getCurrent()
+    val isGoogleLogin = currentUser?.providerData?.any { it.providerId == "google.com" } ?: false
+
     var profile by remember { mutableStateOf<DataProfile?>(null) }
     val historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
-    val textError by remember { mutableStateOf("") }
-    val name = if (getDisplayName.isNotBlank()) {getDisplayName} else if(profile?.name?.isNotBlank()!!){ profile?.name } else stringResource(R.string.guest)
+    var textError by remember { mutableStateOf("") }
+
+    val userDisplayInfo = remember(currentUser, profile) {
+        if (isGoogleLogin) {
+            ProfileModel(
+                name = currentUser?.displayName ?: context.getString(R.string.guest),
+                photoUrl = currentUser?.photoUrl.toString(),
+                email = currentUser?.email.toString()
+            )
+        } else {
+            ProfileModel(
+                name = profile?.name ?: context.getString(R.string.guest),
+                photoUrl = profile?.profile_picture_url ?: "",
+                email = currentUser?.email.toString()
+            )
+        }
+    }
+
     LaunchedEffect(Unit) {
 //        viewModel.getHistory().observeForever { resource ->
 //            when (resource) {
@@ -93,20 +112,23 @@ fun HomeScreen(
 //            }
 //        }
 
-        viewModel.getProfile(getEmail).observeForever { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-                    Log.d("HomeScreen", "Fetching profile: Loading...")
-                    loading = true
-                }
-
-                is Resource.Success -> {
-                    loading = false
-                    profile = resource.data.data
-                    Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
-                }
-                is Resource.Error -> {
-                    loading = false
+        if (!isGoogleLogin) {
+            viewModel.getProfile(userDisplayInfo.email.toString()).observeForever { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        Log.d("HomeScreen", "Fetching profile: Loading...")
+                        loading = true
+                    }
+                    is Resource.Success -> {
+                        loading = false
+                        profile = resource.data.data
+                        Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
+                    }
+                    is Resource.Error -> {
+                        loading = false
+                        dialogError = true
+                        textError = resource.message
+                    }
                 }
             }
         }
@@ -145,7 +167,7 @@ fun HomeScreen(
                     Text(
                         text = stringResource(
                             R.string.hai_user,
-                            name!!
+                            userDisplayInfo.name
                         ),
                         fontSize = 12.sp,
                         fontFamily = poppins,
@@ -154,7 +176,7 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                     AsyncImage(
-                        model = getPhotoUrl,
+                        model = if (userDisplayInfo.photoUrl != "") userDisplayInfo.photoUrl else R.drawable.profile,
                         contentDescription = stringResource(R.string.logo),
                         modifier = Modifier
                             .clip(CircleShape)
@@ -370,5 +392,3 @@ fun CardMenu(
         }
     }
 }
-
-

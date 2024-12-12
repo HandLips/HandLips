@@ -1,5 +1,7 @@
 package id.handlips.navigation.graphs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,6 +15,7 @@ import id.handlips.views.home.HomeViewModel
 import id.handlips.views.on_boarding.OnBoardingScreen
 import id.handlips.views.on_boarding.OnBoardingViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -57,6 +60,9 @@ fun NavGraph(
                 },
                 onClickGantiPassword = {
                     navController.navigate(Screen.ForgotPassword.route)
+                },
+                onClickUpdateProfile = {
+                    navController.navigate(DetailsScreen.UpdateProfile.route)
                 })
         }
         composable(route = Route.ONBOARDING) {

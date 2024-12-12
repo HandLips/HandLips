@@ -50,39 +50,9 @@ constructor(
             Resource.Error(e.message ?: "An error occurred")
         }
 
-    suspend fun updatePassword(newPassword: String): Resource<Unit> =
-        try {
-            auth.currentUser?.updatePassword(newPassword)?.await()
-            Resource.Success(Unit)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "An error occurred")
-        }
-
-    suspend fun reauthenticateUser(
-        email: String,
-        password: String,
-    ): Resource<Unit> =
-        try {
-            val credential = EmailAuthProvider.getCredential(email, password)
-            auth.currentUser?.reauthenticate(credential)?.await()
-            Resource.Success(Unit)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "An error occurred")
-        }
-
     fun logout() {
         auth.signOut()
 
-    }
-
-    fun checkEmailVerification(onVerified: () -> Unit, onUnverified: () -> Unit) {
-        val user = auth.currentUser
-        user?.reload() // Reload untuk memastikan data terbaru
-        if (user?.isEmailVerified == true) {
-            onVerified()
-        } else {
-            onUnverified()
-        }
     }
 
     suspend fun signInWithGoogle(credential: AuthCredential): Flow<Resource<AuthResult>> {

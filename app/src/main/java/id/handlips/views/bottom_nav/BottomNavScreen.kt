@@ -33,6 +33,8 @@ fun BottomNavScreen(
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
     onClickGantiPassword: () -> Unit,
+    onClickUpdateProfile: () -> Unit
+    onClickGantiPassword: () -> Unit,
     onCreateChat: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -51,6 +53,8 @@ fun BottomNavScreen(
                 onClickCustomerService = onClickCustomerService,
                 onClickGantiPassword = onClickGantiPassword,
                 onCreateChat = onCreateChat
+                onClickGantiPassword = onClickGantiPassword,
+                onClickUpdateProfile = onClickUpdateProfile
             )
         }
     }
