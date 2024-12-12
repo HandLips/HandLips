@@ -9,3 +9,7 @@ annotation class DefaultRetrofit
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SpeechToTextRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GeminiRetrofit
