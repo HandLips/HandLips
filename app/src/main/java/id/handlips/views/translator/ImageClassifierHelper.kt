@@ -41,7 +41,7 @@ class ImageClassifierHelper(
 
     private fun setupClassifiers() {
         alphabetClassifier = initializeModel("model_alphabeth_metadata.tflite")
-        wordClassifier = initializeModel("model_coba_metadata.tflite")
+        wordClassifier = initializeModel("model_word_metadata.tflite")
     }
 
     private fun initializeModel(modelName: String): ImageClassifier {
