@@ -168,7 +168,7 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
 
             ResultBoard(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                result = "result: $resultText inference: $inferenceTimeText",
+                result = "$resultText\n inference: $inferenceTimeText",
                 translatorMode = translatorMode,
                 speechState = speechState,
                 onClickTranslatorMode = {

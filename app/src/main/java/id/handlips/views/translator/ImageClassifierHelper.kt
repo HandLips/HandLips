@@ -14,73 +14,79 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
-import kotlin.toString
 import kotlin.use
 
 class ImageClassifierHelper(
-    val targetSize: Int,
     var threshold: Float = 0f,
     var maxResults: Int = 1,
-    val modelName: String = "model_alphabeth_metadata.tflite",
     val context: Context,
     val classifierListener: ClassifierListener?,
 ) {
-    private var imageClassifier: ImageClassifier? = null
+    private var alphabetClassifier: ImageClassifier? = null
+    private var wordClassifier: ImageClassifier? = null
 
-    init {
-        setupImageClassifier()
+    private val alphabetProcessor =
+        ImageProcessor
+            .Builder()
+            .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+            .add(CastOp(DataType.FLOAT32))
+            .build()
+
+    private val wordProcessor =
+        ImageProcessor
+            .Builder()
+            .add(ResizeOp(150, 150, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+            .add(CastOp(DataType.FLOAT32))
+            .build()
+
+    private fun setupClassifiers() {
+        alphabetClassifier = initializeModel("model_alphabeth_metadata.tflite")
+        wordClassifier = initializeModel("model_coba_metadata.tflite")
     }
 
-    private fun setupImageClassifier() {
+    private fun initializeModel(modelName: String): ImageClassifier {
         val optionsBuilder =
             ImageClassifier.ImageClassifierOptions
                 .builder()
                 .setScoreThreshold(threshold)
                 .setMaxResults(maxResults)
-        val baseOptionsBuilder =
-            BaseOptions
-                .builder()
-                .setNumThreads(4)
-        optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
-
-        try {
-            imageClassifier =
-                ImageClassifier.createFromFileAndOptions(
-                    context,
-                    modelName,
-                    optionsBuilder.build(),
-                )
-        } catch (e: IllegalStateException) {
-            classifierListener?.onError("Image classifier failed to initialize. See error logs for details")
-            Log.e(TAG, e.message.toString())
-        }
+                .setBaseOptions(BaseOptions.builder().setNumThreads(4).build())
+        return ImageClassifier.createFromFileAndOptions(context, modelName, optionsBuilder.build())
     }
 
-    fun classifyImage(image: ImageProxy) {
-        if (imageClassifier == null) {
-            setupImageClassifier()
+    init {
+        setupClassifiers()
+    }
+
+    fun classifyImageWithBoth(image: ImageProxy) {
+        if (alphabetClassifier == null || wordClassifier == null) {
+            setupClassifiers()
         }
-        val imageProcessor =
-            ImageProcessor
-                .Builder()
-                .add(ResizeOp(targetSize, targetSize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-                .add(CastOp(DataType.FLOAT32))
-                .build()
-
-        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(toBitmap(image)))
-
-        val imageProcessingOptions =
+        val tensorImage = TensorImage.fromBitmap(toBitmap(image))
+        val imageOptions =
             ImageProcessingOptions
                 .builder()
                 .setOrientation(getOrientationFromRotation(image.imageInfo.rotationDegrees))
                 .build()
 
-        var inferenceTime = SystemClock.uptimeMillis()
-        val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
+        val alphabetImage = alphabetProcessor.process(tensorImage)
+        val wordImage = wordProcessor.process(tensorImage)
 
+        var inferenceTime = SystemClock.uptimeMillis()
+        // Run classification on both models
+        val alphabetResults = alphabetClassifier?.classify(alphabetImage, imageOptions)
+        val wordResults = wordClassifier?.classify(wordImage, imageOptions)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+
+        Log.d("ImageClassifierHelper", "Alphabet Results: $alphabetResults")
+        Log.d("ImageClassifierHelper", "Word Results: $wordResults")
+
+        // Combine results
         classifierListener?.onResults(
-            results,
+            mapOf(
+                "Alphabet" to alphabetResults,
+                "Word" to wordResults,
+            ),
             inferenceTime,
         )
     }
@@ -109,7 +115,7 @@ class ImageClassifierHelper(
         fun onError(error: String)
 
         fun onResults(
-            results: List<org.tensorflow.lite.task.vision.classifier.Classifications>?,
+            results: Map<String, List<org.tensorflow.lite.task.vision.classifier.Classifications>?>,
             inferenceTime: Long,
         )
     }
