@@ -33,7 +33,7 @@ fun BottomNavScreen(
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
     onClickGantiPassword: () -> Unit,
-    onClickUpdateProfile: (name: String, photoUrl: String) -> Unit
+    onClickUpdateProfile: () -> Unit
 ) {
     val navController = rememberNavController()
     Scaffold(

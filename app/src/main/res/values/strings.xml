@@ -111,4 +111,5 @@
     <string name="logo">logo</string>
     <string name="chat_bot">Chat Bot</string>
     <string name="enter_your_name">Enter your name</string>
+    <string name="update_profile_success">Update Profile Success</string>
 </resources>

@@ -58,11 +58,8 @@ fun NavGraph(
                 onClickGantiPassword = {
                     navController.navigate(Screen.ForgotPassword.route)
                 },
-                onClickUpdateProfile = { name, photoUrl ->
-                    navController.navigate(DetailsScreen.UpdateProfile.createRoute(
-                        name = name,
-                        photoUrl = photoUrl
-                    ))
+                onClickUpdateProfile = {
+                    navController.navigate(DetailsScreen.UpdateProfile.route)
                 })
         }
         composable(route = Route.ONBOARDING) {

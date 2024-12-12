@@ -1,6 +1,7 @@
 package id.handlips.data.remote
 
 import id.handlips.data.model.FeedbackResponse
+import id.handlips.data.model.FileUploadResponse
 import id.handlips.data.model.HistoryResponse
 import id.handlips.data.model.ListSoundResponse
 import id.handlips.data.model.ProfileResponse
@@ -21,8 +22,6 @@ interface ApiService {
     @GET("history")
     suspend fun getHistory(): HistoryResponse
 
-
-
     @GET("soundboards/{email}")
     suspend fun getSound(
         @Path("email") email: String,
@@ -36,11 +35,12 @@ interface ApiService {
     ): ProfileResponse
 
     @Multipart
-    @PUT("profile")
+    @PUT("profile/{email}")
     suspend fun updateProfile(
+        @Path("email") email: String,
         @Part("name") name: RequestBody,
-        @Part profilePicture: MultipartBody.Part
-    ): ProfileResponse
+        @Part profilePicture: MultipartBody.Part? = null
+    ): FileUploadResponse
 
     @GET("profile/{email}")
     suspend fun getProfile(

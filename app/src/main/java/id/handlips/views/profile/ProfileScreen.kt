@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -71,7 +72,7 @@ fun ProfileScreen(
     onClickCustomerService: () -> Unit,
     onClickGuide: () -> Unit,
     onCickGantiPassword: () -> Unit,
-    onClickUpdateProfile: (name: String, photoUrl: String) -> Unit,
+    onClickUpdateProfile: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val currentUser = viewModel.getCurrent()
@@ -80,13 +81,10 @@ fun ProfileScreen(
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
-
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestEmail()
-        .requestIdToken(clientId)
-        .build()
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+        .requestIdToken(clientId).build()
     val googleSignInClient = GoogleSignIn.getClient(context, gso)
 
     val userDisplayInfo = remember(currentUser, profile) {
@@ -123,6 +121,7 @@ fun ProfileScreen(
                     profile = resource.data.data
                     Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
                 }
+
                 is Resource.Error -> {
                     loading = false
                 }
@@ -131,8 +130,7 @@ fun ProfileScreen(
     }
     Scaffold(modifier = modifier.fillMaxSize()) { paddingValues ->
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp)
@@ -143,13 +141,16 @@ fun ProfileScreen(
             AsyncImage(
                 model = if (userDisplayInfo.photoUrl != "") userDisplayInfo.photoUrl else R.drawable.profile,
                 contentDescription = "Deskripsi gambar",
-                modifier = Modifier.clip(shape = CircleShape).size(130.dp) // Ukuran gambar
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .size(130.dp) // Ukuran gambar
             )
             Spacer(Modifier.height(20.dp))
             Row(
-                modifier =
-                Modifier
-                    .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
+                modifier = Modifier
+                    .border(
+                        width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp)
+                    )
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -169,15 +170,12 @@ fun ProfileScreen(
             Spacer(Modifier.height(4.dp))
             Text(userDisplayInfo.email.toString())
             Spacer(Modifier.height(12.dp))
-            if(!isGoogleLogin){
+            if (!isGoogleLogin) {
                 Button(
                     shape = RoundedCornerShape(8.dp),
-                    onClick = {
-                        onClickUpdateProfile(userDisplayInfo.name, userDisplayInfo.photoUrl)
-                    },
+                    onClick = onClickUpdateProfile,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Blue,
-                        contentColor = Color.White
+                        containerColor = Blue, contentColor = Color.White
                     ),
                 ) { Text("Edit Profile") }
             }
@@ -219,7 +217,6 @@ fun ProfileScreen(
                         if (task.isSuccessful) {
                             // Google sign-out berhasil
                             if (viewModel.logout()) {
-                                // Jika logout berhasil di ViewModel, panggil onClickLogout()
                                 onClickLogout()
                             }
                         } else {
@@ -248,8 +245,7 @@ fun Section(
     Column(modifier = Modifier.padding(top = 12.dp)) {
         Text(text = title, modifier = Modifier.padding(vertical = 8.dp), fontSize = 18.sp)
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .shadow(
                     elevation = 5.dp, // Tinggi bayangan
@@ -273,8 +269,7 @@ fun SectionItem(
     Surface(onClick = onClickItem) {
         Column {
             Row(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,

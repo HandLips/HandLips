@@ -19,7 +19,7 @@ fun BottomNavGraph(
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
     onClickGantiPassword: () -> Unit,
-    onClickUpdateProfile: (name: String, photoUrl: String)-> Unit
+    onClickUpdateProfile: ()-> Unit
 ) {
     NavHost(
         navController = navController,

@@ -29,6 +29,4 @@ constructor(
 
     fun getProfile(email: String) = profileRepository.getProfile(email)
 
-    fun updateProfile(name: String, profilePicture: File) = profileRepository.updateProfile(name, profilePicture)
-
 }
