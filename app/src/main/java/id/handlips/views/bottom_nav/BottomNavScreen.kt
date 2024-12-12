@@ -32,8 +32,7 @@ fun BottomNavScreen(
     onClickGuide: () -> Unit,
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
-    onClickGantiPassword: () -> Unit,
-    onClickUpdateProfile: () -> Unit
+    onClickUpdateProfile: () -> Unit,
     onClickGantiPassword: () -> Unit,
     onCreateChat: () -> Unit
 ) {
@@ -52,8 +51,7 @@ fun BottomNavScreen(
                 onClickLangganan = onClickLangganan,
                 onClickCustomerService = onClickCustomerService,
                 onClickGantiPassword = onClickGantiPassword,
-                onCreateChat = onCreateChat
-                onClickGantiPassword = onClickGantiPassword,
+                onCreateChat = onCreateChat,
                 onClickUpdateProfile = onClickUpdateProfile
             )
         }
