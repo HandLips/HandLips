@@ -47,10 +47,10 @@ object MainModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
-    @MainRetrofit
+    @DefaultRetrofit
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit =
+    fun provideMainRetrofit(client: OkHttpClient): Retrofit =
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -67,18 +67,19 @@ object MainModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    @SpeechToTextRetrofit
     @Provides
-    fun provideSpeechToTextApiService(retrofit: Retrofit): SpeechToTextApiService = retrofit.create(SpeechToTextApiService::class.java)
+    fun provideSpeechToTextApiService(
+        @SpeechToTextRetrofit retrofit: Retrofit,
+    ): SpeechToTextApiService = retrofit.create(SpeechToTextApiService::class.java)
 
-    @SpeechToTextRetrofit
     @Provides
     fun provideSpeechToTextRepository(api: SpeechToTextApiService): SpeechToTextRepository = SpeechToTextRepository(api)
 
-    @MainRetrofit
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(
+        @DefaultRetrofit retrofit: Retrofit,
+    ): ApiService = retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton

@@ -4,7 +4,7 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class MainRetrofit
+annotation class DefaultRetrofit
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

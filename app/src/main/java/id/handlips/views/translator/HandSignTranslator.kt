@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import id.handlips.component.board.ResultBoard
 import id.handlips.ui.theme.HandlipsTheme
 import id.handlips.ui.theme.White
@@ -66,9 +66,9 @@ class HandSignTranslator : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding),
+                        Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     ) {
                         TranslatorScreen()
                     }
@@ -80,13 +80,16 @@ class HandSignTranslator : ComponentActivity() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun TranslatorScreen() {
+fun TranslatorScreen(
+    speechToTextViewModel: SpeechToTextViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.HAND_SIGN) }
     var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
     var resultText by remember { mutableStateOf("") }
-    var speechText by remember { mutableStateOf("") }
     var inferenceTimeText by remember { mutableStateOf("") }
+
+    val speechText by speechToTextViewModel.resultText
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -153,14 +156,14 @@ fun TranslatorScreen() {
                 }
 
                 TranslatorMode.SPEECH ->
-//                    Text(
-//                        speechText,
-//                        modifier = Modifier.align(Alignment.TopCenter),
-//                    )
-                    Column {
-                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
-                        Button(onClick = { player.stop() }) { Text("Stop") }
-                    }
+                    Text(
+                        speechText,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
+//                    Column {
+//                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
+//                        Button(onClick = { player.stop() }) { Text("Stop") }
+//                    }
             }
 
             ResultBoard(
@@ -175,7 +178,7 @@ fun TranslatorScreen() {
                             TranslatorMode.HAND_SIGN -> TranslatorMode.SPEECH
                             TranslatorMode.SPEECH -> TranslatorMode.HAND_SIGN
                         }
-                    speechText = ""
+//                    speechText = ""
                 },
                 onSpeechButtonClick = {
                     Log.e("TranslatorScreen", "onSpeechButtonClick: $speechState")
@@ -184,10 +187,11 @@ fun TranslatorScreen() {
                     when (speechState) {
                         SpeechState.RECORDING -> {
                             speechState = SpeechState.STOPPED
-                            speechText = "Stopped"
+//                            speechTextResult = "Stopped"
 
                             recorder.stopRecording()
                             convertPcmToWav(pcmFile = pcmFile, wavFile = wavFile)
+                            speechToTextViewModel.speechToText(title = "test", audioFile = wavFile)
                             Log.d("Recording", pcmFile.toString())
                             Log.d("Recording", wavFile.toString())
                             Log.d("Context Cache", context.cacheDir.toString())
@@ -195,11 +199,10 @@ fun TranslatorScreen() {
 
                         SpeechState.STOPPED -> {
                             speechState = SpeechState.RECORDING
-                            speechText = "Recording"
+//                            speechTextResult = "Recording"
+//                            speechText = ""
 
-                                recorder.startRecording(context = context, outputFile = pcmFile)
-
-
+                            recorder.startRecording(context = context, outputFile = pcmFile)
 
                             Log.d("Recording", pcmFile.toString())
                             Log.d("Context Cache", context.cacheDir.toString())
@@ -215,32 +218,6 @@ fun TranslatorScreen() {
         ) {
             Text("Camera permission is required.")
         }
-    }
-}
-
-fun startRecording(recorder: MediaRecorder, outputFile: File) {
-        recorder.apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(outputFile.absolutePath)
-        }
-
-    try {
-        recorder.prepare()
-        recorder.start()
-    } catch (e: IOException) {
-        Log.e("Recording Error", e.toString())
-        e.printStackTrace()
-    }
-}
-
-fun stopRecording(recorder: MediaRecorder) {
-    try {
-        recorder.stop()
-        recorder.release()
-    } catch (e: RuntimeException) {
-        e.printStackTrace()
     }
 }
 
@@ -323,9 +300,9 @@ private fun HandSignTranslatorPreview() {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             ) {
                 when (translatorMode) {
                     TranslatorMode.HAND_SIGN -> Text("Camera Preview") // CameraPreview()
