@@ -46,7 +46,7 @@ fun CameraPreview(
         val imageClassifierHelper =
             ImageClassifierHelper(
                 threshold = 0f,
-                maxResults = 5,
+                maxResults = 1,
                 context = context,
                 classifierListener =
                     object : ImageClassifierHelper.ClassifierListener {
