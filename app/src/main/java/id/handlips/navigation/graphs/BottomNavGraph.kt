@@ -19,6 +19,7 @@ fun BottomNavGraph(
     onClickLangganan: () -> Unit,
     onClickCustomerService: () -> Unit,
     onClickGantiPassword: () -> Unit,
+    onClickUpdateProfile: (name: String, photoUrl: String)-> Unit
 ) {
     NavHost(
         navController = navController,
@@ -35,7 +36,7 @@ fun BottomNavGraph(
             ShortcutScreen(navHostController = navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen(onClickLogout = onCLick, onClickLangganan = onClickLangganan, onClickCustomerService = onClickCustomerService, onClickGuide = onClickGuide, onCickGantiPassword = onClickGantiPassword)
+            ProfileScreen(onClickLogout = onCLick, onClickLangganan = onClickLangganan, onClickCustomerService = onClickCustomerService, onClickGuide = onClickGuide, onCickGantiPassword = onClickGantiPassword, onClickUpdateProfile = onClickUpdateProfile)
         }
 
     }

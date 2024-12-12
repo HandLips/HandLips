@@ -6,15 +6,22 @@ import id.handlips.data.model.ListSoundResponse
 import id.handlips.data.model.ProfileResponse
 import id.handlips.data.model.ReportResponse
 import id.handlips.data.model.SoundResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
     @GET("history")
     suspend fun getHistory(): HistoryResponse
+
+
 
     @GET("soundboards/{email}")
     suspend fun getSound(
@@ -26,6 +33,13 @@ interface ApiService {
     suspend fun signUp(
         @Field("name") name: String,
         @Field("email") email: String,
+    ): ProfileResponse
+
+    @Multipart
+    @PUT("profile")
+    suspend fun updateProfile(
+        @Part("name") name: RequestBody,
+        @Part profilePicture: MultipartBody.Part
     ): ProfileResponse
 
     @GET("profile/{email}")

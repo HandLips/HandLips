@@ -1,5 +1,7 @@
 package id.handlips.views.profile
 
+import android.provider.ContactsContract.Profile
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,12 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,20 +43,25 @@ import id.handlips.ui.theme.Blue
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import id.handlips.component.button.LongButton
 import id.handlips.R
 import id.handlips.component.dialog.DialogError
+import id.handlips.data.model.DataProfile
+import id.handlips.data.model.ProfileModel
 import id.handlips.ui.theme.poppins
 import id.handlips.utils.Constraint.clientId
+import id.handlips.utils.Resource
 
 @Composable
 fun ProfileScreen(
@@ -67,8 +71,16 @@ fun ProfileScreen(
     onClickCustomerService: () -> Unit,
     onClickGuide: () -> Unit,
     onCickGantiPassword: () -> Unit,
+    onClickUpdateProfile: (name: String, photoUrl: String) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val currentUser = viewModel.getCurrent()
+    val isGoogleLogin = currentUser?.providerData?.any { it.providerId == "google.com" } ?: false
+    var profile by remember { mutableStateOf<DataProfile?>(null) }
+    var loading by remember { mutableStateOf(false) }
+    var dialogError by remember { mutableStateOf(false) }
+    var textError by remember { mutableStateOf("") }
+
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -76,10 +88,46 @@ fun ProfileScreen(
         .requestIdToken(clientId)
         .build()
     val googleSignInClient = GoogleSignIn.getClient(context, gso)
-    var dialogError by remember { mutableStateOf(false) }
-    var textError by remember { mutableStateOf("") }
+
+    val userDisplayInfo = remember(currentUser, profile) {
+        if (isGoogleLogin) {
+            ProfileModel(
+                name = currentUser?.displayName ?: context.getString(R.string.guest),
+                photoUrl = currentUser?.photoUrl.toString(),
+                email = currentUser?.email.toString()
+            )
+        } else {
+            ProfileModel(
+                name = profile?.name ?: context.getString(R.string.guest),
+                photoUrl = profile?.profile_picture_url ?: "",
+                email = currentUser?.email.toString()
+            )
+        }
+    }
+
+
     if (dialogError) {
         DialogError(onDismissRequest = { dialogError = false }, textError = textError)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getProfile(userDisplayInfo.email.toString()).observeForever { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    Log.d("HomeScreen", "Fetching profile: Loading...")
+                    loading = true
+                }
+
+                is Resource.Success -> {
+                    loading = false
+                    profile = resource.data.data
+                    Log.d("HomeScreen", "Profile fetched successfully: ${profile?.name}")
+                }
+                is Resource.Error -> {
+                    loading = false
+                }
+            }
+        }
     }
     Scaffold(modifier = modifier.fillMaxSize()) { paddingValues ->
         Column(
@@ -92,10 +140,10 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Image(
-                painter = painterResource(R.drawable.profile),
-                contentDescription = "Profile Photo",
-                modifier = Modifier.clip(shape = CircleShape),
+            AsyncImage(
+                model = if (userDisplayInfo.photoUrl != "") userDisplayInfo.photoUrl else R.drawable.profile,
+                contentDescription = "Deskripsi gambar",
+                modifier = Modifier.clip(shape = CircleShape).size(130.dp) // Ukuran gambar
             )
             Spacer(Modifier.height(20.dp))
             Row(
@@ -117,19 +165,22 @@ fun ProfileScreen(
                 )
             }
             Spacer(Modifier.height(12.dp))
-            Text("Ivan Try Wicaksono", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(userDisplayInfo.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            Text(viewModel.getCurrentEmail())
+            Text(userDisplayInfo.email.toString())
             Spacer(Modifier.height(12.dp))
-            Button(
-                shape = RoundedCornerShape(8.dp),
-                onClick = { null },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Blue,
-                    contentColor = Color.White
-                ),
-            ) { Text("Edit Profile") }
-
+            if(!isGoogleLogin){
+                Button(
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = {
+                        onClickUpdateProfile(userDisplayInfo.name, userDisplayInfo.photoUrl)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Blue,
+                        contentColor = Color.White
+                    ),
+                ) { Text("Edit Profile") }
+            }
             Section("Inventaris") {
                 SectionItem(
                     "Langganan",
