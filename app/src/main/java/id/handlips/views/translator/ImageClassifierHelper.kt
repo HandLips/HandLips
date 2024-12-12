@@ -18,9 +18,10 @@ import kotlin.toString
 import kotlin.use
 
 class ImageClassifierHelper(
+    val targetSize: Int,
     var threshold: Float = 0f,
     var maxResults: Int = 1,
-    val modelName: String = "model_coba_metadata.tflite",
+    val modelName: String = "model_alphabeth_metadata.tflite",
     val context: Context,
     val classifierListener: ClassifierListener?,
 ) {
@@ -62,7 +63,7 @@ class ImageClassifierHelper(
         val imageProcessor =
             ImageProcessor
                 .Builder()
-                .add(ResizeOp(150, 150, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+                .add(ResizeOp(targetSize, targetSize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
                 .add(CastOp(DataType.FLOAT32))
                 .build()
 

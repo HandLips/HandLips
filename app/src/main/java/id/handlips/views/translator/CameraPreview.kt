@@ -27,11 +27,10 @@ import java.util.concurrent.Executors
 fun CameraPreview(
     modifier: Modifier = Modifier,
     onClassificationResults: (String, String) -> Unit,
+    lensFacing: Int = CameraSelector.LENS_FACING_BACK,
 ) {
     val context: Context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    val cameraController: LifecycleCameraController =
-        remember { LifecycleCameraController(context) }
 
     val cameraProviderFuture =
         remember {
@@ -41,23 +40,16 @@ fun CameraPreview(
     val previewView =
         remember {
             PreviewView(context)
-//                .apply {
-//                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-//                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-//                    scaleType = PreviewView.ScaleType.FILL_START
-//                }.also { previewView ->
-//                    previewView.controller = cameraController
-//                    cameraController.bindToLifecycle(lifecycleOwner)
-//                }
         }
 
     LaunchedEffect(cameraProviderFuture) {
         val cameraProvider = cameraProviderFuture.get()
         val imageClassifierHelper =
             ImageClassifierHelper(
+                targetSize = 224,
                 threshold = 0f,
-                maxResults = 10,
-                modelName = "model_coba_metadata.tflite",
+                maxResults = 5,
+                modelName = "model_alphabeth_metadata.tflite",
                 context = context,
                 classifierListener =
                     object : ImageClassifierHelper.ClassifierListener {
@@ -91,7 +83,7 @@ fun CameraPreview(
 
         val preview =
             Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                it.surfaceProvider = previewView.surfaceProvider
             }
 
         val resolutionSelector =
@@ -112,11 +104,19 @@ fun CameraPreview(
                     }
                 }
 
+        val cameraSelector =
+            CameraSelector
+                .Builder()
+                .requireLensFacing(lensFacing)
+                .build()
+
+        Log.d("PreviewCam", cameraSelector.toString())
+
         try {
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(
                 lifecycleOwner,
-                CameraSelector.DEFAULT_FRONT_CAMERA,
+                cameraSelector,
                 preview,
                 imageAnalyzer,
             )
