@@ -84,6 +84,8 @@ object MainModule {
     ): ApiService = retrofit.create(ApiService::class.java)
 
     @GeminiRetrofit
+    @Provides
+    @Singleton
     fun provideGemini(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BuildConfig.GEMINI_API)
