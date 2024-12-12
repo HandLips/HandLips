@@ -18,8 +18,8 @@ import kotlin.toString
 import kotlin.use
 
 class ImageClassifierHelper(
-    var threshold: Float = 0.1f,
-    var maxResults: Int = 3,
+    var threshold: Float = 0f,
+    var maxResults: Int = 1,
     val modelName: String = "model_coba_metadata.tflite",
     val context: Context,
     val classifierListener: ClassifierListener?,
@@ -83,50 +83,6 @@ class ImageClassifierHelper(
             inferenceTime,
         )
     }
-
-//    private fun classifyImage(image: Bitmap) {
-//        try {
-//            val model = ModelCoba.newInstance(applicationContext)
-//
-//            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 150, 150, 3), DataType.FLOAT32)
-//            val byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3)
-//            byteBuffer.order(ByteOrder.nativeOrder())
-//
-//            val intValues = IntArray(imageSize * imageSize)
-//            image.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
-//            var pixel = 0
-//            for (i in 0 until imageSize) {
-//                for (j in 0 until imageSize) {
-//                    val value = intValues[pixel++]
-//                    byteBuffer.putFloat(((value shr 16) and 0xFF) * (1f / 255))
-//                    byteBuffer.putFloat(((value shr 8) and 0xFF) * (1f / 255))
-//                    byteBuffer.putFloat((value and 0xFF) * (1f / 255))
-//                }
-//            }
-//
-//            inputFeature0.loadBuffer(byteBuffer)
-//
-//            val outputs = model.process(inputFeature0)
-//            val outputFeature0 = outputs.outputFeature0AsTensorBuffer
-//
-//            val confidences = outputFeature0.floatArray
-//            val maxPos = confidences.indices.maxByOrNull { confidences[it] } ?: -1
-//            val maxConfidence = confidences[maxPos] * 100 // Konversi ke persentase
-//            val classes = arrayOf(
-//                "baca", "bantu", "makan", "bapak", "buangairkecil", "buat", "halo",
-//                "ibu", "maaf", "mau", "kamu", "nama", "pagi", "paham", "sakit",
-//                "sama-sama", "saya", "selamat", "siapa", "tanya", "tempat",
-//                "terimakasih", "terlambat", "tidak", "tolong", "tugas"
-//            )
-//
-//            // Tampilkan hasil dengan confidence
-//            result.text = "Prediksi: ${classes[maxPos]} \nAkurasi: %.2f%%".format(maxConfidence)
-//
-//            model.close()
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }
 
     private fun toBitmap(image: ImageProxy): Bitmap {
         val bitmapBuffer =
