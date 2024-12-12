@@ -106,12 +106,9 @@ fun TranslatorScreen() {
         )
     }
 
-    val currentMilliseconds = System.currentTimeMillis()
     val pcmFile = File(context.cacheDir, "recording_cache.pcm")
     val wavFile = File(context.cacheDir, "recording_cache.wav")
-//    var audioFile: File? by remember { mutableStateOf(null) }
-//    var wavFile: File? by remember { mutableStateOf(null) }
-//    val recorder = remember { MediaRecorder() }
+
     val recorder = remember { AudioRecorder() }
 
     val player by lazy {
@@ -190,7 +187,6 @@ fun TranslatorScreen() {
                             speechText = "Stopped"
 
                             recorder.stopRecording()
-//                            stopRecording(recorder)
                             convertPcmToWav(pcmFile = pcmFile, wavFile = wavFile)
                             Log.d("Recording", pcmFile.toString())
                             Log.d("Recording", wavFile.toString())
@@ -201,21 +197,9 @@ fun TranslatorScreen() {
                             speechState = SpeechState.RECORDING
                             speechText = "Recording"
 
-//                            File(
-//                                context.cacheDir,
-//                                "recording.mp3",
-//                            ).also { pcm ->
                                 recorder.startRecording(context = context, outputFile = pcmFile)
-//                                startRecording(recorder, pcm)
-//                                audioFile = pcm
 
 
-//                                File(context.cacheDir, "recording.wav").also {
-//                                    convertPcmToWav(pcm, it)
-//                                    wavFile = it
-//                                    Log.d("Wav", wavFile.toString())
-//                                }
-//                            }
 
                             Log.d("Recording", pcmFile.toString())
                             Log.d("Context Cache", context.cacheDir.toString())
@@ -233,14 +217,13 @@ fun TranslatorScreen() {
         }
     }
 }
-//${System.currentTimeMillis()}
+
 fun startRecording(recorder: MediaRecorder, outputFile: File) {
         recorder.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setOutputFile(outputFile.absolutePath)
-//            setAudioChannels(AudioFormat.CHANNEL_IN_MONO)
         }
 
     try {
