@@ -1,42 +1,27 @@
+@file:Suppress("DEPRECATION")
+
 package id.handlips.views.translator
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
+import android.media.MediaRecorder
 import android.os.Bundle
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.LinearLayout
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.view.LifecycleCameraController
-import androidx.camera.view.PreviewView
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,22 +34,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import id.handlips.ui.theme.Blue
+import androidx.hilt.navigation.compose.hiltViewModel
+import id.handlips.component.board.ResultBoard
 import id.handlips.ui.theme.HandlipsTheme
-import id.handlips.ui.theme.Red
 import id.handlips.ui.theme.White
+import java.io.File
+import java.io.IOException
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+
+enum class TranslatorMode {
+    HAND_SIGN,
+    SPEECH,
+}
+
+enum class SpeechState {
+    RECORDING,
+    STOPPED,
+}
 
 class HandSignTranslator : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,8 +64,13 @@ class HandSignTranslator : ComponentActivity() {
         setContent {
             HandlipsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                        CameraScreen()
+                    Column(
+                        modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) {
+                        TranslatorScreen()
                     }
                 }
             }
@@ -84,112 +80,17 @@ class HandSignTranslator : ComponentActivity() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun ResultBoard(
-    result: String,
-    isSpeechToText: Boolean = false,
+fun TranslatorScreen(
+    speechToTextViewModel: SpeechToTextViewModel = hiltViewModel()
 ) {
-    Card(
-        shape =
-            RoundedCornerShape(
-                topStart = 20.dp,
-                topEnd = 20.dp,
-            ),
-        border = BorderStroke(width = 1.dp, color = Blue),
-    ) {
-        Box(
-            modifier =
-                Modifier
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                colors =
-                                    listOf(
-                                        White,
-                                        White,
-                                        White,
-                                        Blue,
-                                    ),
-                            ),
-                    ).padding(16.dp), // Padding inside the card
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (isSpeechToText) {
-                    CircleButton(
-                        icon = Icons.Filled.Star,
-                        containerColor = Red,
-                        contentColor = White,
-                        onClick = {},
-                        contentDescription = "",
-                        size = 120,
-                    )
-                } else {
-                    Text(result, fontSize = 20.sp)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    CircleButton(
-                        icon = Icons.Filled.Refresh,
-                        onClick = { null },
-                        contentDescription = "Riwayat Percakapan",
-                    )
-                    CircleButton(
-                        icon = Icons.Filled.Call,
-                        onClick = { null },
-                        contentDescription = "Terjemah Suara ke Teks",
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun CircleButton(
-    icon: ImageVector,
-    containerColor: Color = Blue,
-    contentColor: Color = White,
-    onClick: () -> Unit,
-    contentDescription: String,
-    size: Int = 94,
-) {
-    val iconSize = size - (size / 1.5)
-    LargeFloatingActionButton(
-        onClick = {
-            onClick
-        },
-        shape = CircleShape,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        modifier =
-            Modifier
-                .shadow(
-                    elevation = 24.dp,
-                    shape = CircleShape,
-                    spotColor = White,
-                ).size(size.dp),
-    ) {
-        Icon(
-            icon,
-            contentDescription,
-            modifier = Modifier.size(iconSize.dp),
-        )
-    }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun CameraScreen() {
     val context = LocalContext.current
+    var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.HAND_SIGN) }
+    var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
+    var resultText by remember { mutableStateOf("") }
+    var inferenceTimeText by remember { mutableStateOf("") }
+
+    val speechText by speechToTextViewModel.resultText
+
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -199,21 +100,117 @@ fun CameraScreen() {
         )
     }
 
-    val permissionLauncher =
+    var hasMicrophonePermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO,
+            ) == PackageManager.PERMISSION_GRANTED,
+        )
+    }
+
+    val pcmFile = File(context.cacheDir, "recording_cache.pcm")
+    val wavFile = File(context.cacheDir, "recording_cache.wav")
+
+    val recorder = remember { AudioRecorder() }
+
+    val player by lazy {
+        AndroidAudioPlayer(context)
+    }
+
+    val cameraPermissionLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
         ) { isGranted ->
             hasCameraPermission = isGranted
         }
 
+    val microphonePermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            hasMicrophonePermission = isGranted
+        }
+
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+        if (!hasMicrophonePermission) {
+            microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
         }
     }
 
     if (hasCameraPermission) {
-        CameraPreview()
+        Box(modifier = Modifier.fillMaxSize()) {
+            when (translatorMode) {
+                TranslatorMode.HAND_SIGN -> {
+                    Box(modifier = Modifier.align(Alignment.TopCenter)) {
+                        CameraPreview(
+                            onClassificationResults = { results, inferenceTime ->
+                                resultText = results
+                                inferenceTimeText = inferenceTime
+                            },
+                        )
+                    }
+                }
+
+                TranslatorMode.SPEECH ->
+                    Text(
+                        speechText,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
+//                    Column {
+//                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
+//                        Button(onClick = { player.stop() }) { Text("Stop") }
+//                    }
+            }
+
+            ResultBoard(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                result = "result: $resultText inference: $inferenceTimeText",
+                translatorMode = translatorMode,
+                speechState = speechState,
+                onClickTranslatorMode = {
+                    Log.e("TranslatorScreen", "onClickTranslatorMode: $translatorMode")
+                    translatorMode =
+                        when (translatorMode) {
+                            TranslatorMode.HAND_SIGN -> TranslatorMode.SPEECH
+                            TranslatorMode.SPEECH -> TranslatorMode.HAND_SIGN
+                        }
+//                    speechText = ""
+                },
+                onSpeechButtonClick = {
+                    Log.e("TranslatorScreen", "onSpeechButtonClick: $speechState")
+                    resultText = ""
+
+                    when (speechState) {
+                        SpeechState.RECORDING -> {
+                            speechState = SpeechState.STOPPED
+//                            speechTextResult = "Stopped"
+
+                            recorder.stopRecording()
+                            convertPcmToWav(pcmFile = pcmFile, wavFile = wavFile)
+                            speechToTextViewModel.speechToText(title = "test", audioFile = wavFile)
+                            Log.d("Recording", pcmFile.toString())
+                            Log.d("Recording", wavFile.toString())
+                            Log.d("Context Cache", context.cacheDir.toString())
+                        }
+
+                        SpeechState.STOPPED -> {
+                            speechState = SpeechState.RECORDING
+//                            speechTextResult = "Recording"
+//                            speechText = ""
+
+                            recorder.startRecording(context = context, outputFile = pcmFile)
+
+                            Log.d("Recording", pcmFile.toString())
+                            Log.d("Context Cache", context.cacheDir.toString())
+                        }
+                    }
+                },
+            )
+        }
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -224,27 +221,48 @@ fun CameraScreen() {
     }
 }
 
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun CameraPreview(modifier: Modifier = Modifier.fillMaxSize()) {
-    val context: Context = LocalContext.current
-    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    val cameraController: LifecycleCameraController = remember { LifecycleCameraController(context) }
+fun convertPcmToWav(
+    pcmFile: File,
+    wavFile: File,
+) {
+    val pcmData = pcmFile.readBytes()
+    val wavHeader = createWavHeader(pcmData.size)
 
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            PreviewView(context)
-                .apply {
-                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-                    scaleType = PreviewView.ScaleType.FILL_START
-                }.also { previewView ->
-                    previewView.controller = cameraController
-                    cameraController.bindToLifecycle(lifecycleOwner)
-                }
-        },
-    )
+    wavFile.outputStream().use { outputStream ->
+        outputStream.write(wavHeader)
+        outputStream.write(pcmData)
+    }
+}
+
+fun createWavHeader(pcmDataLength: Int): ByteArray {
+    val totalDataLength = pcmDataLength + 36
+    val sampleRate = 16000
+    val channels = 1
+    val byteRate = sampleRate * channels * 2
+
+    return ByteBuffer
+        .allocate(44)
+        .order(ByteOrder.LITTLE_ENDIAN)
+        .apply {
+            // RIFF header
+            put("RIFF".toByteArray())
+            putInt(totalDataLength)
+            put("WAVE".toByteArray())
+
+            // fmt sub-chunk
+            put("fmt ".toByteArray())
+            putInt(16) // Sub-chunk size (16 for PCM)
+            putShort(1.toShort()) // Audio format (1 for PCM)
+            putShort(channels.toShort())
+            putInt(sampleRate)
+            putInt(byteRate)
+            putShort((channels * 2).toShort()) // Block align
+            putShort(16.toShort()) // Bits per sample
+
+            // data sub-chunk
+            put("data".toByteArray())
+            putInt(pcmDataLength)
+        }.array()
 }
 
 @Preview(showBackground = true)
@@ -254,12 +272,19 @@ fun CameraPreview(modifier: Modifier = Modifier.fillMaxSize()) {
 @Composable
 private fun HandSignTranslatorPreview() {
     HandlipsTheme {
-        val isSpeechToText: Boolean = false
+        val translatorMode: TranslatorMode = TranslatorMode.HAND_SIGN
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
-                    navigationIcon = { IconButton({ null }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "") } },
+                    navigationIcon = {
+                        IconButton({ null }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                "",
+                            )
+                        }
+                    },
                     colors =
                         TopAppBarDefaults.topAppBarColors(
                             containerColor = White,
@@ -275,17 +300,19 @@ private fun HandSignTranslatorPreview() {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             ) {
-                if (isSpeechToText) {
-                    Text("Speech to Text Result")
-                } else {
-                    Text("Camera Preview")
-//                CameraPreview()
+                when (translatorMode) {
+                    TranslatorMode.HAND_SIGN -> Text("Camera Preview") // CameraPreview()
+                    TranslatorMode.SPEECH -> Text("Speech to Text Result")
                 }
-                ResultBoard(isSpeechToText = isSpeechToText, result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?")
+
+//                ResultBoard(
+//                    translatorMode = translatorMode,
+//                    result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?",
+//                )
             }
         }
     }

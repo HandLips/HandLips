@@ -29,7 +29,10 @@ import id.handlips.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommunicationScreen(modifier: Modifier = Modifier) {
+fun ChatScreen(
+    modifier: Modifier = Modifier,
+    onCreateChat: () -> Unit,
+) {
     var communicationTitle by remember { mutableStateOf("") }
 
     HandlipsTheme {
@@ -55,7 +58,7 @@ fun CommunicationScreen(modifier: Modifier = Modifier) {
                         value = communicationTitle,
                         onValueChange = { communicationTitle = it },
                     )
-                    LongButton(text = "Buat Baru", onClick = {})
+                    LongButton(text = "Buat Baru", onClick = onCreateChat)
                 }
             }
         }
@@ -64,6 +67,6 @@ fun CommunicationScreen(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun CommunicationScreenPreview(modifier: Modifier = Modifier) {
-    CommunicationScreen()
+private fun ChatScreenPreview(modifier: Modifier = Modifier) {
+//    ChatScreen()
 }

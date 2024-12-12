@@ -48,6 +48,7 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+        mlModelBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -100,7 +101,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // Hilt
-    implementation (libs.hilt.android)
+    implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -129,6 +130,11 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.extensions)
-    implementation (libs.gms.play.services.auth)
+    implementation(libs.gms.play.services.auth)
 
+    // ML
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+//    implementation(libs.tensorflow.lite.gpu)
+    implementation(libs.tensorflow.lite.task.vision)
 }
