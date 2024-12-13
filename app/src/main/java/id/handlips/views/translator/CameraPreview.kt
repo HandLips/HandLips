@@ -9,7 +9,6 @@ import androidx.camera.core.Preview
 import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,11 +26,10 @@ import java.util.concurrent.Executors
 fun CameraPreview(
     modifier: Modifier = Modifier,
     onClassificationResults: (String, String) -> Unit,
+    lensFacing: Int = CameraSelector.LENS_FACING_BACK,
 ) {
     val context: Context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    val cameraController: LifecycleCameraController =
-        remember { LifecycleCameraController(context) }
 
     val cameraProviderFuture =
         remember {
@@ -41,14 +39,6 @@ fun CameraPreview(
     val previewView =
         remember {
             PreviewView(context)
-//                .apply {
-//                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-//                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-//                    scaleType = PreviewView.ScaleType.FILL_START
-//                }.also { previewView ->
-//                    previewView.controller = cameraController
-//                    cameraController.bindToLifecycle(lifecycleOwner)
-//                }
         }
 
     LaunchedEffect(cameraProviderFuture) {
@@ -56,8 +46,7 @@ fun CameraPreview(
         val imageClassifierHelper =
             ImageClassifierHelper(
                 threshold = 0f,
-                maxResults = 10,
-                modelName = "model_coba_metadata.tflite",
+                maxResults = 3,
                 context = context,
                 classifierListener =
                     object : ImageClassifierHelper.ClassifierListener {
@@ -66,24 +55,46 @@ fun CameraPreview(
                         }
 
                         override fun onResults(
-                            results: List<Classifications>?,
+                            results: Map<String, List<Classifications>?>,
                             inferenceTime: Long,
                         ) {
-                            results?.let { it ->
+                            results.let { it ->
                                 Log.e("CameraPreview", "Results: $it")
-                                if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {
-                                    val sortedCategories =
-                                        it[0].categories.sortedByDescending { it?.score }
-                                    val displayResult =
-                                        sortedCategories.joinToString("\n") {
-                                            "${it.label} " +
+                                val alphabetResults =
+                                    results["Alphabet"]
+                                        ?.firstOrNull()
+                                        ?.categories
+                                        ?.sortedByDescending { it.score }
+                                        ?.joinToString("\n") {
+                                            "${it.label}: " +
                                                 NumberFormat
                                                     .getPercentInstance()
                                                     .format(it.score)
                                                     .trim()
                                         }
-                                    onClassificationResults(displayResult, "$inferenceTime ms")
-                                }
+                                        ?: "No alphabet detected"
+
+                                val wordResults =
+                                    results["Word"]
+                                        ?.firstOrNull()
+                                        ?.categories
+                                        ?.sortedByDescending { it.score }
+                                        ?.joinToString("\n") {
+                                            "${it.label}: " +
+                                                NumberFormat
+                                                    .getPercentInstance()
+                                                    .format(it.score)
+                                                    .trim()
+                                        }
+                                        ?: "No word detected"
+
+                                Log.d("onResults", "Alphabet Results: \n$alphabetResults")
+                                Log.d("onResults", "Word Results: \n$wordResults")
+
+                                onClassificationResults(
+                                    "Alphabet Results:\n$alphabetResults\n\nWord Results:\n$wordResults",
+                                    "$inferenceTime ms",
+                                )
                             }
                         }
                     },
@@ -91,7 +102,7 @@ fun CameraPreview(
 
         val preview =
             Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                it.surfaceProvider = previewView.surfaceProvider
             }
 
         val resolutionSelector =
@@ -108,15 +119,23 @@ fun CameraPreview(
                 .build()
                 .also { analysis ->
                     analysis.setAnalyzer(Executors.newSingleThreadExecutor()) { image ->
-                        imageClassifierHelper.classifyImage(image)
+                        imageClassifierHelper.classifyImageWithBoth(image)
                     }
                 }
+
+        val cameraSelector =
+            CameraSelector
+                .Builder()
+                .requireLensFacing(lensFacing)
+                .build()
+
+        Log.d("PreviewCam", cameraSelector.toString())
 
         try {
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(
                 lifecycleOwner,
-                CameraSelector.DEFAULT_FRONT_CAMERA,
+                cameraSelector,
                 preview,
                 imageAnalyzer,
             )
