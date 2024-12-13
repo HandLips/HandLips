@@ -1,0 +1,26 @@
+Index: .idea/kotlinc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"KotlinJpsPluginSettings\">\r\n    <option name=\"version\" value=\"2.0.0\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/kotlinc.xml b/.idea/kotlinc.xml
+--- a/.idea/kotlinc.xml	(revision 0bdf62b8480cb5c8ec65b9ccdb091fcb64d2e285)
++++ b/.idea/kotlinc.xml	(date 1731833758957)
+@@ -1,5 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="Kotlin2JsCompilerArguments">
++    <option name="moduleKind" value="plain" />
++  </component>
++  <component name="Kotlin2JvmCompilerArguments">
++    <option name="jvmTarget" value="1.8" />
++  </component>
++  <component name="KotlinCommonCompilerArguments">
++    <option name="apiVersion" value="1.9" />
++    <option name="languageVersion" value="1.9" />
++  </component>
+   <component name="KotlinJpsPluginSettings">
+     <option name="version" value="2.0.0" />
+   </component>
