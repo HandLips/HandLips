@@ -66,6 +66,9 @@ fun NavGraph(
                 },
                 onClickHistory = {
                     navController.navigate(DetailsScreen.History.route)
+                },
+                onClcikDetailHistory = {
+                    navController.navigate(DetailsScreen.DetailHistory.route)
                 }
             )
         }
@@ -82,7 +85,9 @@ fun NavGraph(
         detailsHomeNavGraph(navController, onClickBack = {
             navController.popBackStack()
         })
-        chatNavGraph(navController = navController)
+        chatNavGraph(navController = navController, onClickHistoryDetail = {
+            navController.navigate(DetailsScreen.DetailHistory.route)
+        })
     }
 }
 

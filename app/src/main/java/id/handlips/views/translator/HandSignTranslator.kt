@@ -50,6 +50,7 @@ enum class SpeechState {
 @Composable
 fun TranslatorScreen(
     speechToTextViewModel: SpeechToTextViewModel = hiltViewModel(),
+    onClickHistoryDetail: () -> Unit
 ) {
     val context = LocalContext.current
     var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.HAND_SIGN) }
@@ -186,6 +187,7 @@ fun TranslatorScreen(
                         }
 //                    speechText = ""
                 },
+                onClickHistory = onClickHistoryDetail ,
                 onSpeechButtonClick = {
                     Log.e("TranslatorScreen", "onSpeechButtonClick: $speechState")
                     resultText = ""

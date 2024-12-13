@@ -21,7 +21,8 @@ fun BottomNavGraph(
     onClickGantiPassword: () -> Unit,
     onCreateChat: () -> Unit,
     onClickUpdateProfile: () -> Unit,
-    onClickHistory: () -> Unit
+    onClickHistory: () -> Unit,
+    onClickDetailHistory: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -29,7 +30,7 @@ fun BottomNavGraph(
         startDestination = BottomBarScreen.Home.route,
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen( onClickSubscripe = onClickSubscribe, onClickEvent = onClickEvent, onCLickHistory = onClickHistory)
+            HomeScreen( onClickSubscripe = onClickSubscribe, onClickEvent = onClickEvent, onCLickHistory = onClickHistory, onClickDetailHistory = onClickDetailHistory)
         }
         composable(route = BottomBarScreen.Chat.route) {
             ChatScreen(onCreateChat = onCreateChat)

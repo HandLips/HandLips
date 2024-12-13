@@ -62,7 +62,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onClickSubscripe: () -> Unit,
     onClickEvent: () -> Unit,
-    onCLickHistory: () -> Unit
+    onCLickHistory: () -> Unit,
+    onClickDetailHistory: () -> Unit
 ) {
     val context = LocalContext.current
     val currentUser = viewModel.getCurrent()
@@ -269,13 +270,13 @@ fun HomeScreen(
                     modifier = Modifier
                         .padding(top = 10.dp)
                 ) {
-                    if (historyItems.isNotEmpty()) {
-                        historyItems.forEach { historyItem ->
+                    if (dummyHistoryItems.isNotEmpty()) {
+                        dummyHistoryItems.forEach { historyItem ->
                             CardComponent(
                                 title = historyItem.title.trim(),
-                                sumChat = historyItem.message.size.toString(),
-                                date = formatDate(historyItem.message.last()?.createdAt ?: "Now"),
-                                onClick = { Log.d("HomeScreen", "Clicked on history item: ${historyItem.title}") }
+                                sumChat = historyItem.sumChat,
+                                date = formatDate(historyItem.date),
+                                onClick = onClickDetailHistory
                             )
                         }
                     } else {
@@ -387,3 +388,46 @@ fun CardMenu(
         }
     }
 }
+
+data class HistoryItem(
+    val id: String,
+    val title: String,
+    val sumChat: String,
+    val date: String
+)
+
+// Helper function to format date
+
+
+val dummyHistoryItems = listOf(
+    HistoryItem(
+        id = "1",
+        title = "Konsultasi Kesehatan Mental",
+        sumChat = "15",
+        date = "2024-11-29T11:47:48.000Z"
+    ),
+    HistoryItem(
+        id = "2",
+        title = "Diskusi Masalah Keluarga",
+        sumChat = "23",
+        date = "2024-11-28T09:30:00.000Z"
+    ),
+    HistoryItem(
+        id = "3",
+        title = "Bimbingan Karir",
+        sumChat = "18",
+        date = "2024-11-27T14:15:22.000Z"
+    ),
+    HistoryItem(
+        id = "4",
+        title = "Konseling Pribadi",
+        sumChat = "12",
+        date = "2024-11-26T16:20:10.000Z"
+    ),
+    HistoryItem(
+        id = "5",
+        title = "Masalah Akademik",
+        sumChat = "25",
+        date = "2024-11-25T10:05:30.000Z"
+    )
+)
