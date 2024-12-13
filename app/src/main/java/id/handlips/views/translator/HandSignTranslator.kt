@@ -86,6 +86,16 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
 
     val speechText by speechToTextViewModel.resultText
     val isLoading by speechToTextViewModel.isLoading
+
+    val pcmFile = File(context.cacheDir, "recording_cache.pcm")
+    val wavFile = File(context.cacheDir, "recording_cache.wav")
+
+    val recorder = remember { AudioRecorder() }
+
+//    val player by lazy {
+//        AndroidAudioPlayer(context)
+//    }
+
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -104,35 +114,45 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
         )
     }
 
-    val pcmFile = File(context.cacheDir, "recording_cache.pcm")
-    val wavFile = File(context.cacheDir, "recording_cache.wav")
+//    val cameraPermissionLauncher =
+//        rememberLauncherForActivityResult(
+//            contract = ActivityResultContracts.RequestPermission(),
+//        ) { isGranted ->
+//            hasCameraPermission = isGranted
+//        }
+//
+//    val microphonePermissionLauncher =
+//        rememberLauncherForActivityResult(
+//            contract = ActivityResultContracts.RequestPermission(),
+//        ) { isGranted ->
+//            hasMicrophonePermission = isGranted
+//        }
 
-    val recorder = remember { AudioRecorder() }
+//    LaunchedEffect(Unit) {
+//        if (!hasCameraPermission) {
+//            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+//        }
+//        if (!hasMicrophonePermission) {
+//            microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+//        }
+//    }
 
-    val player by lazy {
-        AndroidAudioPlayer(context)
-    }
-
-    val cameraPermissionLauncher =
+    val permissionsLauncher =
         rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-        ) { isGranted ->
-            hasCameraPermission = isGranted
-        }
-
-    val microphonePermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-        ) { isGranted ->
-            hasMicrophonePermission = isGranted
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+        ) { permissions ->
+            hasCameraPermission = permissions[Manifest.permission.CAMERA] ?: false
+            hasMicrophonePermission = permissions[Manifest.permission.RECORD_AUDIO] ?: false
         }
 
     LaunchedEffect(Unit) {
-        if (!hasCameraPermission) {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-        if (!hasMicrophonePermission) {
-            microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        if (!hasCameraPermission || !hasMicrophonePermission) {
+            permissionsLauncher.launch(
+                arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO,
+                ),
+            )
         }
     }
 
@@ -170,7 +190,7 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
                         text = speechText,
                         fontFamily = poppins,
                         fontSize = 24.sp,
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
+                        modifier = Modifier.align(Alignment.TopCenter).padding(16.dp),
                     )
 //                    Column {
 //                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
