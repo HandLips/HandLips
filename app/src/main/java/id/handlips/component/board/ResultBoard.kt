@@ -38,7 +38,7 @@ fun ResultBoard(
     speechState: SpeechState = SpeechState.STOPPED,
     onClickTranslatorMode: () -> Unit,
     onSpeechButtonClick: () -> Unit,
-    onClickCameraSwitch: () -> Unit,
+//    onClickHistory: () -> Unit,
 ) {
     val speechContainerColor: Color =
         when (speechState) {
@@ -116,7 +116,8 @@ fun ResultBoard(
                 ) {
                     CircleButton(
                         icon = painterResource(id = R.drawable.ic_history),
-                        onClick = onClickCameraSwitch,
+//                        onClick = onClickHistory,
+                        onClick = {},
                         contentDescription = "Riwayat Percakapan",
                     )
                     CircleButton(

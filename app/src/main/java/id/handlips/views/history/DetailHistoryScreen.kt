@@ -77,7 +77,7 @@ fun DetailHistoryScreen(modifier: Modifier = Modifier) {
             items(10) { index ->
                 ChatBubbleComponent(
                     message = "Test chat",
-                    time = "Test time",
+                    time = "now",
                     isFromMe = index % 2 == 0,
                 )
             }

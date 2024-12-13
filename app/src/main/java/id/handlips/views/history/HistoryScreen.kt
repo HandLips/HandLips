@@ -80,7 +80,7 @@ fun HistoryScreen(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
             // Preview
             items(10) {
                 CardComponent(
-                    title = "Judul",
+                    title = "Judul Komunikasi",
                     sumChat = "20",
                     date = formatDate("2024-11-29T11:47:48.000Z"),
                     onClick = { null },
