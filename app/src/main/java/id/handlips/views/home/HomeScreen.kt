@@ -91,7 +91,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.getHistory(getEmail).observeForever { resource ->
+        viewModel.getHistory(userDisplayInfo.email.toString()).observeForever { resource ->
             when (resource) {
                 is Resource.Loading -> {
                     Log.d("HomeScreen", "Fetching history: Loading...")

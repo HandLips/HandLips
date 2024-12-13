@@ -23,18 +23,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.handlips.R
 import id.handlips.component.button.LongButton
+import id.handlips.component.dialog.DialogError
+import id.handlips.component.dialog.DialogSuccess
 import id.handlips.component.textfield.GeneralTextField
 import id.handlips.ui.theme.HandlipsTheme
 import id.handlips.ui.theme.White
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
     onCreateChat: () -> Unit,
 ) {
-    var communicationTitle by remember { mutableStateOf("Komunikasi tanpa judul") }
-
+    var communicationTitle by remember { mutableStateOf("") }
+    var dialogError by remember { mutableStateOf(false) }
+    var dialogSuccess by remember { mutableStateOf(false) }
+    var textError by remember { mutableStateOf("") }
+    var textSuccess by remember { mutableStateOf("") }
+    if (dialogError) {
+        DialogError(onDismissRequest = { dialogError = false }, textError = textError)
+    }
+    if (dialogSuccess) {
+        DialogSuccess(onDismissRequest = onCreateChat, textSuccess = textSuccess)
+    }
     HandlipsTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -44,7 +54,7 @@ fun ChatScreen(
                 modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(120.dp),
             ) {
-                Text(text = "Komunikasi", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Communication", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Column {
                     Image(
                         painter = painterResource(id = R.drawable.communication),
@@ -53,12 +63,20 @@ fun ChatScreen(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     GeneralTextField(
-                        title = "Judul Komunikasi",
-                        label = "Masukkan Judul Komunikasi",
+                        title = "Communication Title",
+                        label = "Enter communication title",
                         value = communicationTitle,
                         onValueChange = { communicationTitle = it },
                     )
-                    LongButton(text = "Buat Baru", onClick = {})
+                    LongButton(text = "Create New", onClick = {
+                        if(communicationTitle.isNotBlank()){
+                            dialogSuccess = true
+                            textSuccess = "Communication created successfully"
+                        } else {
+                            dialogError = true
+                            textError = "Please enter communication title"
+                        }
+                    })
                 }
             }
         }

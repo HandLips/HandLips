@@ -169,15 +169,6 @@ fun ProfileScreen(
             Spacer(Modifier.height(4.dp))
             Text(userDisplayInfo.email.toString())
             Spacer(Modifier.height(12.dp))
-            if (!isGoogleLogin) {
-                Button(
-                    shape = RoundedCornerShape(8.dp),
-                    onClick = onClickUpdateProfile,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Blue, contentColor = Color.White
-                    ),
-                ) { Text("Edit Profile") }
-            }
             Section("Inventaris") {
                 SectionItem(
                     "Langganan",
