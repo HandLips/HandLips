@@ -33,7 +33,7 @@ fun ChatScreen(
     modifier: Modifier = Modifier,
     onCreateChat: () -> Unit,
 ) {
-    var communicationTitle by remember { mutableStateOf("") }
+    var communicationTitle by remember { mutableStateOf("Komunikasi tanpa judul") }
 
     HandlipsTheme {
         Scaffold(

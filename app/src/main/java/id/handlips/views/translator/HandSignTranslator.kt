@@ -4,7 +4,6 @@ package id.handlips.views.translator
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.media.MediaRecorder
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,23 +11,19 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
+import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,14 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.handlips.component.board.ResultBoard
+import id.handlips.component.loading.LoadingAnimation
 import id.handlips.ui.theme.HandlipsTheme
-import id.handlips.ui.theme.White
+import id.handlips.ui.theme.poppins
 import java.io.File
-import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -66,9 +62,9 @@ class HandSignTranslator : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(
                         modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
+                            Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
                     ) {
                         TranslatorScreen()
                     }
@@ -80,17 +76,16 @@ class HandSignTranslator : ComponentActivity() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun TranslatorScreen(
-    speechToTextViewModel: SpeechToTextViewModel = hiltViewModel()
-) {
+fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewModel()) {
     val context = LocalContext.current
     var translatorMode: TranslatorMode by remember { mutableStateOf(TranslatorMode.HAND_SIGN) }
     var speechState: SpeechState by remember { mutableStateOf(SpeechState.STOPPED) }
     var resultText by remember { mutableStateOf("") }
     var inferenceTimeText by remember { mutableStateOf("") }
+    var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_BACK) }
 
     val speechText by speechToTextViewModel.resultText
-
+    val isLoading by speechToTextViewModel.isLoading
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -141,6 +136,20 @@ fun TranslatorScreen(
         }
     }
 
+    if (isLoading) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.White.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            LoadingAnimation(
+                modifier = Modifier.size(100.dp),
+            )
+        }
+    }
+
     if (hasCameraPermission) {
         Box(modifier = Modifier.fillMaxSize()) {
             when (translatorMode) {
@@ -151,14 +160,17 @@ fun TranslatorScreen(
                                 resultText = results
                                 inferenceTimeText = inferenceTime
                             },
+                            lensFacing = lensFacing,
                         )
                     }
                 }
 
                 TranslatorMode.SPEECH ->
                     Text(
-                        speechText,
-                        modifier = Modifier.align(Alignment.TopCenter),
+                        text = speechText,
+                        fontFamily = poppins,
+                        fontSize = 24.sp,
+                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
                     )
 //                    Column {
 //                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
@@ -168,7 +180,7 @@ fun TranslatorScreen(
 
             ResultBoard(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                result = "result: $resultText inference: $inferenceTimeText",
+                result = "$resultText\n inference: $inferenceTimeText",
                 translatorMode = translatorMode,
                 speechState = speechState,
                 onClickTranslatorMode = {
@@ -208,6 +220,15 @@ fun TranslatorScreen(
                             Log.d("Context Cache", context.cacheDir.toString())
                         }
                     }
+                },
+                onClickCameraSwitch = {
+                    Log.d("TranslatorScreen", "onClickCameraSwitch: $lensFacing")
+                    lensFacing =
+                        if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                            CameraSelector.LENS_FACING_FRONT
+                        } else {
+                            CameraSelector.LENS_FACING_BACK
+                        }
                 },
             )
         }
@@ -263,57 +284,4 @@ fun createWavHeader(pcmDataLength: Int): ByteArray {
             put("data".toByteArray())
             putInt(pcmDataLength)
         }.array()
-}
-
-@Preview(showBackground = true)
-@OptIn(ExperimentalMaterial3Api::class)
-@Suppress("ktlint:standard:function-naming")
-@Preview(showBackground = true)
-@Composable
-private fun HandSignTranslatorPreview() {
-    HandlipsTheme {
-        val translatorMode: TranslatorMode = TranslatorMode.HAND_SIGN
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    navigationIcon = {
-                        IconButton({ null }) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                "",
-                            )
-                        }
-                    },
-                    colors =
-                        TopAppBarDefaults.topAppBarColors(
-                            containerColor = White,
-                            titleContentColor = Color.Black,
-                        ),
-                    title = {
-                        Text("Penerjemah")
-                    },
-                )
-            },
-        ) { innerPadding ->
-
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-            ) {
-                when (translatorMode) {
-                    TranslatorMode.HAND_SIGN -> Text("Camera Preview") // CameraPreview()
-                    TranslatorMode.SPEECH -> Text("Speech to Text Result")
-                }
-
-//                ResultBoard(
-//                    translatorMode = translatorMode,
-//                    result = "Hai, Saya tuna rungu. Namaku Budi. Bolehkah saya meminta bantuan?",
-//                )
-            }
-        }
-    }
 }

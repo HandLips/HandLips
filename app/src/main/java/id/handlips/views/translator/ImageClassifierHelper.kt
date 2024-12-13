@@ -14,119 +14,82 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
-import kotlin.toString
 import kotlin.use
 
 class ImageClassifierHelper(
-    var threshold: Float = 0.1f,
-    var maxResults: Int = 3,
-    val modelName: String = "model_coba_metadata.tflite",
+    var threshold: Float = 0f,
+    var maxResults: Int = 1,
     val context: Context,
     val classifierListener: ClassifierListener?,
 ) {
-    private var imageClassifier: ImageClassifier? = null
+    private var alphabetClassifier: ImageClassifier? = null
+    private var wordClassifier: ImageClassifier? = null
 
-    init {
-        setupImageClassifier()
+    private val alphabetProcessor =
+        ImageProcessor
+            .Builder()
+            .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+            .add(CastOp(DataType.FLOAT32))
+            .build()
+
+    private val wordProcessor =
+        ImageProcessor
+            .Builder()
+            .add(ResizeOp(150, 150, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+            .add(CastOp(DataType.FLOAT32))
+            .build()
+
+    private fun setupClassifiers() {
+        alphabetClassifier = initializeModel("model_alphabeth_metadata.tflite")
+        wordClassifier = initializeModel("model_word_metadata.tflite")
     }
 
-    private fun setupImageClassifier() {
+    private fun initializeModel(modelName: String): ImageClassifier {
         val optionsBuilder =
             ImageClassifier.ImageClassifierOptions
                 .builder()
                 .setScoreThreshold(threshold)
                 .setMaxResults(maxResults)
-        val baseOptionsBuilder =
-            BaseOptions
-                .builder()
-                .setNumThreads(4)
-        optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
-
-        try {
-            imageClassifier =
-                ImageClassifier.createFromFileAndOptions(
-                    context,
-                    modelName,
-                    optionsBuilder.build(),
-                )
-        } catch (e: IllegalStateException) {
-            classifierListener?.onError("Image classifier failed to initialize. See error logs for details")
-            Log.e(TAG, e.message.toString())
-        }
+                .setBaseOptions(BaseOptions.builder().setNumThreads(4).build())
+        return ImageClassifier.createFromFileAndOptions(context, modelName, optionsBuilder.build())
     }
 
-    fun classifyImage(image: ImageProxy) {
-        if (imageClassifier == null) {
-            setupImageClassifier()
+    init {
+        setupClassifiers()
+    }
+
+    fun classifyImageWithBoth(image: ImageProxy) {
+        if (alphabetClassifier == null || wordClassifier == null) {
+            setupClassifiers()
         }
-        val imageProcessor =
-            ImageProcessor
-                .Builder()
-                .add(ResizeOp(150, 150, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-                .add(CastOp(DataType.FLOAT32))
-                .build()
-
-        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(toBitmap(image)))
-
-        val imageProcessingOptions =
+        val tensorImage = TensorImage.fromBitmap(toBitmap(image))
+        val imageOptions =
             ImageProcessingOptions
                 .builder()
                 .setOrientation(getOrientationFromRotation(image.imageInfo.rotationDegrees))
                 .build()
 
-        var inferenceTime = SystemClock.uptimeMillis()
-        val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
+        val alphabetImage = alphabetProcessor.process(tensorImage)
+        val wordImage = wordProcessor.process(tensorImage)
 
+        var inferenceTime = SystemClock.uptimeMillis()
+        // Run classification on both models
+        val alphabetResults = alphabetClassifier?.classify(alphabetImage, imageOptions)
+        val wordResults = wordClassifier?.classify(wordImage, imageOptions)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+
+        Log.d("ImageClassifierHelper", "Alphabet Results: $alphabetResults")
+        Log.d("ImageClassifierHelper", "Word Results: $wordResults")
+
+        // Combine results
         classifierListener?.onResults(
-            results,
+            mapOf(
+                "Alphabet" to alphabetResults,
+                "Word" to wordResults,
+            ),
             inferenceTime,
         )
     }
-
-//    private fun classifyImage(image: Bitmap) {
-//        try {
-//            val model = ModelCoba.newInstance(applicationContext)
-//
-//            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 150, 150, 3), DataType.FLOAT32)
-//            val byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3)
-//            byteBuffer.order(ByteOrder.nativeOrder())
-//
-//            val intValues = IntArray(imageSize * imageSize)
-//            image.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
-//            var pixel = 0
-//            for (i in 0 until imageSize) {
-//                for (j in 0 until imageSize) {
-//                    val value = intValues[pixel++]
-//                    byteBuffer.putFloat(((value shr 16) and 0xFF) * (1f / 255))
-//                    byteBuffer.putFloat(((value shr 8) and 0xFF) * (1f / 255))
-//                    byteBuffer.putFloat((value and 0xFF) * (1f / 255))
-//                }
-//            }
-//
-//            inputFeature0.loadBuffer(byteBuffer)
-//
-//            val outputs = model.process(inputFeature0)
-//            val outputFeature0 = outputs.outputFeature0AsTensorBuffer
-//
-//            val confidences = outputFeature0.floatArray
-//            val maxPos = confidences.indices.maxByOrNull { confidences[it] } ?: -1
-//            val maxConfidence = confidences[maxPos] * 100 // Konversi ke persentase
-//            val classes = arrayOf(
-//                "baca", "bantu", "makan", "bapak", "buangairkecil", "buat", "halo",
-//                "ibu", "maaf", "mau", "kamu", "nama", "pagi", "paham", "sakit",
-//                "sama-sama", "saya", "selamat", "siapa", "tanya", "tempat",
-//                "terimakasih", "terlambat", "tidak", "tolong", "tugas"
-//            )
-//
-//            // Tampilkan hasil dengan confidence
-//            result.text = "Prediksi: ${classes[maxPos]} \nAkurasi: %.2f%%".format(maxConfidence)
-//
-//            model.close()
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }
 
     private fun toBitmap(image: ImageProxy): Bitmap {
         val bitmapBuffer =
@@ -152,7 +115,7 @@ class ImageClassifierHelper(
         fun onError(error: String)
 
         fun onResults(
-            results: List<org.tensorflow.lite.task.vision.classifier.Classifications>?,
+            results: Map<String, List<org.tensorflow.lite.task.vision.classifier.Classifications>?>,
             inferenceTime: Long,
         )
     }
