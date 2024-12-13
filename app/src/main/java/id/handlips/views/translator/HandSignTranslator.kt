@@ -12,10 +12,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +29,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import id.handlips.component.board.ResultBoard
+import id.handlips.component.loading.LoadingAnimation
 import id.handlips.ui.theme.HandlipsTheme
+import id.handlips.ui.theme.poppins
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -78,7 +85,7 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
     var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_BACK) }
 
     val speechText by speechToTextViewModel.resultText
-
+    val isLoading by speechToTextViewModel.isLoading
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -129,6 +136,20 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
         }
     }
 
+    if (isLoading) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.White.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            LoadingAnimation(
+                modifier = Modifier.size(100.dp),
+            )
+        }
+    }
+
     if (hasCameraPermission) {
         Box(modifier = Modifier.fillMaxSize()) {
             when (translatorMode) {
@@ -146,8 +167,10 @@ fun TranslatorScreen(speechToTextViewModel: SpeechToTextViewModel = hiltViewMode
 
                 TranslatorMode.SPEECH ->
                     Text(
-                        speechText,
-                        modifier = Modifier.align(Alignment.TopCenter),
+                        text = speechText,
+                        fontFamily = poppins,
+                        fontSize = 24.sp,
+                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
                     )
 //                    Column {
 //                        Button(onClick = { wavFile?.let { player.playFile(it) } }) { Text("Play") }
