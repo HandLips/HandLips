@@ -21,5 +21,5 @@ class HomeViewModel @Inject constructor(private val authRepository: AuthReposito
         return authRepository.isUserAuthenticated()
     }
 
-    fun getHistory() = historyRepository.getHistory()
+    fun getHistory(email: String) = historyRepository.getLatestHistory(email)
 }

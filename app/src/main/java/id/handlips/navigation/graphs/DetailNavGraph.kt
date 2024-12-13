@@ -22,7 +22,7 @@ fun NavGraphBuilder.detailsHomeNavGraph(navController: NavHostController, onClic
             SubscribeScreen(onCLickBack = onClickBack)
         }
         composable(route = DetailsScreen.History.route) {
-            HistoryScreen()
+            HistoryScreen(onClickBack = onClickBack)
         }
         composable(route = DetailsScreen.Event.route) {
             GeminiScreen(onClickBack = onClickBack)

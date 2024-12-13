@@ -61,14 +61,15 @@ import id.handlips.utils.formatDate
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onClickSubscripe: () -> Unit,
-    onClickEvent: () -> Unit
+    onClickEvent: () -> Unit,
+    onCLickHistory: () -> Unit
 ) {
     val context = LocalContext.current
     val currentUser = viewModel.getCurrent()
     val isGoogleLogin = currentUser?.providerData?.any { it.providerId == "google.com" } ?: false
 
     var profile by remember { mutableStateOf<DataProfile?>(null) }
-    val historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
+    var historyItems by remember { mutableStateOf<List<DataHistory>>(emptyList()) }
     var loading by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf(false) }
     var textError by remember { mutableStateOf("") }
@@ -90,27 +91,24 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-//        viewModel.getHistory().observeForever { resource ->
-//            when (resource) {
-//                is Resource.Loading -> {
-//                    Log.d("HomeScreen", "Fetching history: Loading...")
-//                    loading = true
-//                }
-//
-//                is Resource.Success -> {
-//                    loading = false
-//                    historyItems = resource.data.data
-//                    Log.d("HomeScreen", "History fetched successfully: ${historyItems.size} items")
-//                }
-//
-//                is Resource.Error -> {
-//                    loading = false
-//                    dialogError = true
-//                    textError = resource.message
-//                    Log.e("HomeScreen", "Error fetching history: ${resource.message}")
-//                }
-//            }
-//        }
+        viewModel.getHistory(getEmail).observeForever { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    Log.d("HomeScreen", "Fetching history: Loading...")
+                    loading = true
+                }
+
+                is Resource.Success -> {
+                    loading = false
+                    historyItems = resource.data.data
+                    Log.d("HomeScreen", "History fetched successfully: ${historyItems.size} items")
+                }
+
+                is Resource.Error -> {
+                    loading = false
+                }
+            }
+        }
 
         if (!isGoogleLogin) {
             viewModel.getProfile(userDisplayInfo.email.toString()).observeForever { resource ->
@@ -250,7 +248,7 @@ fun HomeScreen(
                         }
                     }
                     Spacer(Modifier.padding(bottom = 15.dp))
-                    MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent)
+                    MenuSection(onClickSubscripe = onClickSubscripe, onClickEvent = onClickEvent, onCLickHistory = onCLickHistory)
                     Spacer(Modifier.padding(bottom = 15.dp))
                 }
             }
@@ -275,8 +273,8 @@ fun HomeScreen(
                         historyItems.forEach { historyItem ->
                             CardComponent(
                                 title = historyItem.title.trim(),
-                                sumChat = historyItem.message?.size.toString(),
-                                date = formatDate(historyItem.createdAt),
+                                sumChat = historyItem.message.size.toString(),
+                                date = formatDate(historyItem.message.last()?.createdAt ?: "Now"),
                                 onClick = { Log.d("HomeScreen", "Clicked on history item: ${historyItem.title}") }
                             )
                         }
@@ -316,7 +314,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
+fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit, onCLickHistory: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -333,18 +331,15 @@ fun MenuSection(onClickSubscripe: () -> Unit, onClickEvent: () -> Unit) {
         CardMenu(
             modifier = Modifier.size(100.dp),
             id = R.drawable.ic_history,
-            title = stringResource(R.string.history)
-        ) {
-            // Handle click event
-        }
+            title = stringResource(R.string.history),
+            onClick = onCLickHistory
+        )
 
         CardMenu(
             modifier = Modifier.size(100.dp),
             id = R.drawable.ic_payment,
             title = stringResource(R.string.langganan),
-            onClick = {
-                onClickSubscripe()
-            }
+            onClick = onClickSubscripe
         )
     }
 }

@@ -58,7 +58,7 @@ fun ChatScreen(
                         value = communicationTitle,
                         onValueChange = { communicationTitle = it },
                     )
-                    LongButton(text = "Buat Baru", onClick = onCreateChat)
+                    LongButton(text = "Buat Baru", onClick = {})
                 }
             }
         }

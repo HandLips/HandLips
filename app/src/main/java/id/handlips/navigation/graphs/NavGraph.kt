@@ -63,7 +63,11 @@ fun NavGraph(
                 },
                 onClickUpdateProfile = {
                     navController.navigate(DetailsScreen.UpdateProfile.route)
-                })
+                },
+                onClickHistory = {
+                    navController.navigate(DetailsScreen.History.route)
+                }
+            )
         }
         composable(route = Route.ONBOARDING) {
             OnBoardingScreen(

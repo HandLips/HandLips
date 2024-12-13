@@ -34,7 +34,8 @@ fun BottomNavScreen(
     onClickCustomerService: () -> Unit,
     onClickUpdateProfile: () -> Unit,
     onClickGantiPassword: () -> Unit,
-    onCreateChat: () -> Unit
+    onCreateChat: () -> Unit,
+    onClickHistory: () -> Unit
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -51,6 +52,7 @@ fun BottomNavScreen(
                 onClickLangganan = onClickLangganan,
                 onClickCustomerService = onClickCustomerService,
                 onClickGantiPassword = onClickGantiPassword,
+                onClickHistory = onClickHistory,
                 onCreateChat = onCreateChat,
                 onClickUpdateProfile = onClickUpdateProfile
             )
